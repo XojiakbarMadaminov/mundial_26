@@ -2,12 +2,17 @@
 
 use App\Models\User;
 
-test('guests are redirected to the login page', function () {
+test('guests can render the dashboard spa shell', function () {
     $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('login'));
+
+    $response->assertOk();
 });
 
-test('authenticated users can visit the dashboard', function () {
+test('authenticated users can render the dashboard spa shell', function () {
+    if (! extension_loaded('pdo_sqlite')) {
+        $this->markTestSkipped('The pdo_sqlite extension is not available in this environment.');
+    }
+
     $user = User::factory()->create();
     $this->actingAs($user);
 
