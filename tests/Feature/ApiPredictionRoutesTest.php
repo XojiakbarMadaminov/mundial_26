@@ -17,6 +17,9 @@ test('prediction api routes are registered', function (string $method, string $u
     'update prediction' => ['PUT', '/api/matches/1/prediction', 'api/matches/{match}/prediction'],
     'my predictions' => ['GET', '/api/my-predictions', null],
     'leaderboard' => ['GET', '/api/leaderboard', null],
+    'nominations' => ['GET', '/api/nominations', null],
+    'store nomination predictions' => ['POST', '/api/nominations/predictions', null],
+    'my nomination predictions' => ['GET', '/api/my-nomination-predictions', null],
 ]);
 
 test('prediction write routes use sanctum authentication', function (string $method, string $uri) {
@@ -27,6 +30,8 @@ test('prediction write routes use sanctum authentication', function (string $met
     'store prediction' => ['POST', '/api/matches/1/prediction'],
     'update prediction' => ['PUT', '/api/matches/1/prediction'],
     'my predictions' => ['GET', '/api/my-predictions'],
+    'store nomination predictions' => ['POST', '/api/nominations/predictions'],
+    'my nomination predictions' => ['GET', '/api/my-nomination-predictions'],
 ]);
 
 test('user model supports sanctum api tokens', function () {
