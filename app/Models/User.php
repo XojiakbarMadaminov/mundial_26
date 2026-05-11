@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'telegram_username', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -42,6 +44,11 @@ class User extends Authenticatable
     public function leaderboardEntries(): HasMany
     {
         return $this->hasMany(LeaderboardEntry::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->role === 'admin';
     }
 
     /**
