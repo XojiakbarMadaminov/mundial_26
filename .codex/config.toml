@@ -1,0 +1,7 @@
+[mcp_servers.laravel-boost]
+command = "php"
+args = ["artisan", "boost:mcp"]
+cwd = "/home/xojiakbar/PhpstormProjects/mundial_26"
+
+[mcp_servers.laravel-boost.tools.search-docs]
+approval_mode = "approve"
