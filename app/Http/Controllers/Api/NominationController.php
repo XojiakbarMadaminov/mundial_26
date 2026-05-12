@@ -51,8 +51,8 @@ class NominationController extends Controller
         return NominationPredictionResource::collection(
             NominationPrediction::query()
                 ->with('nominationCategory')
-                ->where('tournament_id', $this->currentTournament()->id)
-                ->where('user_id', $request->user()->id)
+                ->where('nomination_predictions.tournament_id', $this->currentTournament()->id)
+                ->where('nomination_predictions.user_id', $request->user()->id)
                 ->join('nomination_categories', 'nomination_predictions.nomination_category_id', '=', 'nomination_categories.id')
                 ->orderBy('nomination_categories.sort_order')
                 ->select('nomination_predictions.*')

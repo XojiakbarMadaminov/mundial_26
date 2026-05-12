@@ -4,6 +4,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { api, validationErrors } from '@/spa/lib/api';
 import { formatDateTime } from '@/spa/lib/dates';
+import type { NominationCategory } from '@/spa/lib/types';
 import { useCompetitionStore } from '@/spa/stores/competition';
 
 const competition = useCompetitionStore();
@@ -12,6 +13,15 @@ const errors = ref<Record<string, string>>({});
 const saving = ref(false);
 const message = ref('');
 const isLocked = computed(() => competition.nominationMeta?.is_locked ?? false);
+const errorMessage = computed(
+    () => errors.value.predictions ?? errors.value.tournament ?? '',
+);
+
+type NominationPayload = {
+    category_key: string;
+    value_text: string | null;
+    value_number: number | null;
+};
 
 async function load(): Promise<void> {
     await competition.fetchNominations();
@@ -28,23 +38,47 @@ async function load(): Promise<void> {
     }
 }
 
+function isFilled(category: NominationCategory): boolean {
+    const value = values[category.key];
+
+    if (category.type === 'number') {
+        return value !== null && value !== '' && !Number.isNaN(Number(value));
+    }
+
+    return typeof value === 'string' && value.trim() !== '';
+}
+
+function payloadFor(category: NominationCategory): NominationPayload {
+    const value = values[category.key];
+
+    return {
+        category_key: category.key,
+        value_text: category.type === 'number' ? null : String(value).trim(),
+        value_number: category.type === 'number' ? Number(value) : null,
+    };
+}
+
 async function save(): Promise<void> {
+    const categories = competition.nominationCategories.filter(isFilled);
+
+    if (categories.length === 0) {
+        errors.value = {
+            predictions: 'Fill at least one nomination before saving.',
+        };
+
+        return;
+    }
+
     saving.value = true;
     errors.value = {};
     message.value = '';
 
     try {
         await api.post('/nominations/predictions', {
-            predictions: competition.nominationCategories.map((category) => ({
-                category_key: category.key,
-                value_text:
-                    category.type === 'number' ? null : values[category.key],
-                value_number:
-                    category.type === 'number' ? values[category.key] : null,
-            })),
+            predictions: categories.map(payloadFor),
         });
 
-        message.value = 'Nomination predictions saved.';
+        message.value = 'Filled nominations saved.';
         await load();
     } catch (error) {
         errors.value = validationErrors(error);
@@ -86,7 +120,7 @@ onMounted(load);
             title="No nomination categories"
         />
 
-        <form v-else class="grid gap-3" @submit.prevent="save">
+        <form v-else class="grid gap-3" @submit.prevent="save()">
             <div
                 v-for="category in competition.nominationCategories"
                 :key="category.id"
@@ -118,8 +152,8 @@ onMounted(load);
                 />
             </div>
 
-            <p v-if="errors.predictions" class="text-sm text-destructive">
-                {{ errors.predictions }}
+            <p v-if="errorMessage" class="text-sm text-destructive">
+                {{ errorMessage }}
             </p>
             <p
                 v-if="message"
@@ -138,7 +172,7 @@ onMounted(load);
                 type="submit"
                 :disabled="saving || isLocked"
             >
-                {{ saving ? 'Saving...' : 'Save nominations' }}
+                {{ saving ? 'Saving...' : 'Save filled nominations' }}
             </button>
         </form>
     </div>
