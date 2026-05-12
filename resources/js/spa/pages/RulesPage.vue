@@ -1,81 +1,67 @@
+<script setup lang="ts">
+import { t } from '@/spa/lib/i18n';
+</script>
+
 <template>
     <article class="mx-auto grid max-w-3xl gap-6">
         <div>
-            <h1 class="text-2xl font-semibold">Qoidalar</h1>
+            <h1 class="text-2xl font-semibold">{{ t('rulesTitle') }}</h1>
             <p class="mt-1 text-sm text-muted-foreground">
-                Mundial 26 Predict ball hisoblash tartibi.
+                {{ t('rulesSubtitle') }}
             </p>
         </div>
 
         <section class="rounded-md border bg-card p-5">
-            <h2 class="font-semibold">O'yin hisobini taxmin qilish</h2>
-            <div
-                class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground"
-            >
+            <h2 class="font-semibold">{{ t('scorePredictionRule') }}</h2>
+            <div class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground">
                 <p>
-                    Aniq hisob topilsa:
-                    <strong class="text-foreground">10 ball</strong>.
+                    {{ t('exactScore') }}
+                    <strong class="text-foreground">10 {{ t('pointsUnit') }}</strong>.
                 </p>
                 <p>
-                    Gollar farqi to'g'ri bo'lsa:
-                    <strong class="text-foreground">4 ball</strong>.
+                    {{ t('goalDifference') }}
+                    <strong class="text-foreground">4 {{ t('pointsUnit') }}</strong>.
                 </p>
                 <p>
-                    Natija to'g'ri bo'lsa, ya'ni mezbon g'alaba, mehmon g'alaba
-                    yoki durang:
-                    <strong class="text-foreground">1 ball</strong>.
+                    {{ t('correctResult') }}
+                    <strong class="text-foreground">1 {{ t('pointsUnit') }}</strong>.
                 </p>
-                <p>
-                    Aniq hisob ustuvor: 10 ball berilsa, qo'shimcha 4 yoki 1
-                    ball qo'shilmaydi.
-                </p>
+                <p>{{ t('exactPriority') }}</p>
             </div>
         </section>
 
         <section class="rounded-md border bg-card p-5">
-            <h2 class="font-semibold">Penaltilar</h2>
-            <div
-                class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground"
-            >
-                <p>Penalti hisobi faqat pley-off o'yinlarida hisoblanadi.</p>
+            <h2 class="font-semibold">{{ t('penalties') }}</h2>
+            <div class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground">
+                <p>{{ t('playoffOnly') }}</p>
                 <p>
-                    Aniq penalti hisobi:
-                    <strong class="text-foreground">10 ball</strong>.
+                    {{ t('penaltyExact') }}
+                    <strong class="text-foreground">10 {{ t('pointsUnit') }}</strong>.
                 </p>
                 <p>
-                    Penalti g'olibi to'g'ri bo'lsa:
-                    <strong class="text-foreground">2 ball</strong>.
+                    {{ t('penaltyWinner') }}
+                    <strong class="text-foreground">2 {{ t('pointsUnit') }}</strong>.
                 </p>
-                <p>Penalti ballari asosiy o'yin ballariga qo'shiladi.</p>
+                <p>{{ t('penaltyAdd') }}</p>
             </div>
         </section>
 
         <section class="rounded-md border bg-card p-5">
-            <h2 class="font-semibold">Nomination taxminlari</h2>
-            <div
-                class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground"
-            >
+            <h2 class="font-semibold">{{ t('nominationRules') }}</h2>
+            <div class="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground">
                 <p>
-                    Eng yaxshi futbolchi, darvozabon, to'purar, chempion va
-                    boshqa nominatsiyalarning har biri:
-                    <strong class="text-foreground">30 ball</strong>.
+                    {{ t('nominationRulesText') }}
+                    <strong class="text-foreground">30 {{ t('pointsUnit') }}</strong>.
                 </p>
-                <p>
-                    Nominatsiyalar birinchi turnir o'yini boshlanguncha
-                    o'zgartirilishi mumkin.
-                </p>
-                <p>
-                    Turnir boshlanganidan keyin nominatsiya taxminlari yopiladi.
-                </p>
+                <p>{{ t('nominationRulesChange') }}</p>
+                <p>{{ t('nominationRulesClose') }}</p>
             </div>
         </section>
 
         <section class="rounded-md border bg-card p-5">
-            <h2 class="font-semibold">Yopilish vaqti</h2>
+            <h2 class="font-semibold">{{ t('closingTime') }}</h2>
             <p class="mt-4 text-sm leading-6 text-muted-foreground">
-                Har bir o'yin uchun taxmin qabul qilish o'yin boshlanishidan 2
-                soat oldin yopiladi. Vaqtlar Asia/Tashkent bo'yicha
-                ko'rsatiladi.
+                {{ t('closingTimeText') }}
             </p>
         </section>
     </article>

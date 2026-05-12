@@ -2,7 +2,9 @@
 import { reactive, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
+import LanguageSwitcher from '@/spa/components/LanguageSwitcher.vue';
 import { validationErrors } from '@/spa/lib/api';
+import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
 
 const auth = useAuthStore();
@@ -31,8 +33,7 @@ async function submit(): Promise<void> {
         form.phone = '';
         form.password = '';
         form.password_confirmation = '';
-        message.value =
-            "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida, admin tasdiqlagandan keyin login qilishingiz mumkin.";
+        message.value = t('moderationMessage');
     } catch (error) {
         errors.value = validationErrors(error);
     } finally {
@@ -43,18 +44,21 @@ async function submit(): Promise<void> {
 
 <template>
     <main class="grid min-h-screen place-items-center bg-background px-4 py-8">
+        <div class="fixed right-4 top-4 z-10">
+            <LanguageSwitcher />
+        </div>
         <form
             class="w-full max-w-lg rounded-md border bg-card p-6 shadow-sm"
             @submit.prevent="submit"
         >
-            <h1 class="text-xl font-semibold">Register</h1>
+            <h1 class="text-xl font-semibold">{{ t('registerTitle') }}</h1>
             <p class="mt-1 text-sm text-muted-foreground">
-                Create your Mundial 26 Predict account.
+                {{ t('registerSubtitle') }}
             </p>
 
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
                 <label class="grid gap-1 text-sm font-medium sm:col-span-2">
-                    Name
+                    {{ t('name') }}
                     <input
                         v-model="form.name"
                         class="rounded-md border bg-background px-3 py-2"
@@ -65,7 +69,7 @@ async function submit(): Promise<void> {
                     }}</span>
                 </label>
                 <label class="grid gap-1 text-sm font-medium sm:col-span-2">
-                    Email
+                    {{ t('email') }}
                     <input
                         v-model="form.email"
                         class="rounded-md border bg-background px-3 py-2"
@@ -79,7 +83,7 @@ async function submit(): Promise<void> {
                     >
                 </label>
                 <label class="grid gap-1 text-sm font-medium">
-                    Telegram
+                    {{ t('telegram') }}
                     <input
                         v-model="form.telegram_username"
                         class="rounded-md border bg-background px-3 py-2"
@@ -91,7 +95,7 @@ async function submit(): Promise<void> {
                     >
                 </label>
                 <label class="grid gap-1 text-sm font-medium">
-                    Phone
+                    {{ t('phone') }}
                     <input
                         v-model="form.phone"
                         class="rounded-md border bg-background px-3 py-2"
@@ -103,7 +107,7 @@ async function submit(): Promise<void> {
                     >
                 </label>
                 <label class="grid gap-1 text-sm font-medium">
-                    Password
+                    {{ t('password') }}
                     <input
                         v-model="form.password"
                         class="rounded-md border bg-background px-3 py-2"
@@ -117,7 +121,7 @@ async function submit(): Promise<void> {
                     >
                 </label>
                 <label class="grid gap-1 text-sm font-medium">
-                    Confirm password
+                    {{ t('confirmPassword') }}
                     <input
                         v-model="form.password_confirmation"
                         class="rounded-md border bg-background px-3 py-2"
@@ -132,7 +136,7 @@ async function submit(): Promise<void> {
                 type="submit"
                 :disabled="loading"
             >
-                {{ loading ? 'Creating...' : 'Register' }}
+                {{ loading ? t('creating') : t('register') }}
             </button>
 
             <p
@@ -143,11 +147,11 @@ async function submit(): Promise<void> {
             </p>
 
             <p class="mt-4 text-center text-sm text-muted-foreground">
-                Already registered?
+                {{ t('alreadyRegistered') }}
                 <RouterLink
                     class="font-medium text-foreground underline underline-offset-4"
                     to="/login"
-                    >Login</RouterLink
+                    >{{ t('login') }}</RouterLink
                 >
             </p>
         </form>

@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 
 import MatchCard from '@/spa/components/MatchCard.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
+import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
 import { useCompetitionStore } from '@/spa/stores/competition';
 
@@ -29,25 +30,28 @@ onMounted(() => {
     <div class="grid gap-6">
         <section class="grid gap-4 lg:grid-cols-[1fr_22rem]">
             <div class="rounded-md border bg-card p-5">
-                <p class="text-sm text-muted-foreground">Current tournament</p>
+                <p class="text-sm text-muted-foreground">
+                    {{ t('currentTournament') }}
+                </p>
                 <h1 class="mt-1 text-2xl font-semibold">
-                    {{ competition.tournament?.name ?? 'Tournament' }}
+                    {{ competition.tournament?.name ?? t('tournamentPlaceholder') }}
                 </h1>
                 <p class="mt-2 text-sm text-muted-foreground">
-                    Track your predictions, nominations, and leaderboard
-                    position in one place.
+                    {{ t('trackOverview') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="rounded-md border bg-card p-4">
-                    <p class="text-sm text-muted-foreground">Total points</p>
+                    <p class="text-sm text-muted-foreground">
+                        {{ t('totalPoints') }}
+                    </p>
                     <p class="mt-2 text-3xl font-semibold">
                         {{ myEntry?.total_points ?? 0 }}
                     </p>
                 </div>
                 <div class="rounded-md border bg-card p-4">
-                    <p class="text-sm text-muted-foreground">Rank</p>
+                    <p class="text-sm text-muted-foreground">{{ t('rank') }}</p>
                     <p class="mt-2 text-3xl font-semibold">
                         {{ myEntry?.rank ?? '-' }}
                     </p>
@@ -58,11 +62,11 @@ onMounted(() => {
         <section class="grid gap-6 lg:grid-cols-2">
             <div class="grid gap-3">
                 <div class="flex items-center justify-between gap-3">
-                    <h2 class="text-lg font-semibold">Today matches</h2>
+                    <h2 class="text-lg font-semibold">{{ t('todayMatches') }}</h2>
                     <RouterLink
                         class="text-sm font-medium underline underline-offset-4"
                         to="/matches"
-                        >All matches</RouterLink
+                        >{{ t('allMatches') }}</RouterLink
                     >
                 </div>
                 <StateBlock
@@ -70,7 +74,7 @@ onMounted(() => {
                         !competition.loading &&
                         competition.todayMatches.length === 0
                     "
-                    title="No matches today"
+                    :title="t('noMatchesToday')"
                 />
                 <div class="grid gap-3">
                     <MatchCard
@@ -82,12 +86,14 @@ onMounted(() => {
             </div>
 
             <div class="grid gap-3">
-                <h2 class="text-lg font-semibold">Prediction needed</h2>
+                <h2 class="text-lg font-semibold">
+                    {{ t('predictionNeeded') }}
+                </h2>
                 <StateBlock
                     v-if="
                         !competition.loading && missingPredictions.length === 0
                     "
-                    title="All open matches have predictions"
+                    :title="t('allOpenMatchesHavePredictions')"
                 />
                 <div class="grid gap-3">
                     <MatchCard
@@ -101,7 +107,9 @@ onMounted(() => {
 
         <section class="rounded-md border bg-card">
             <div class="border-b p-4">
-                <h2 class="text-lg font-semibold">Top 5 leaderboard</h2>
+                <h2 class="text-lg font-semibold">
+                    {{ t('top5Leaderboard') }}
+                </h2>
             </div>
             <div class="divide-y">
                 <div

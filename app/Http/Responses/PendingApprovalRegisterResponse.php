@@ -19,8 +19,8 @@ class PendingApprovalRegisterResponse implements RegisterResponse
 
         return $request->wantsJson()
             ? new JsonResponse([
-                'message' => "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida.",
+                'message' => __('auth.registration_pending'),
             ], 201)
-            : redirect('/login')->with('status', "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida.");
+            : redirect('/login')->with('status', __('auth.registration_pending'));
     }
 }

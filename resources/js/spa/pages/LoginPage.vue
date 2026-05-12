@@ -3,7 +3,9 @@ import { Trophy } from 'lucide-vue-next';
 import { reactive, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
+import LanguageSwitcher from '@/spa/components/LanguageSwitcher.vue';
 import { validationErrors } from '@/spa/lib/api';
+import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
 
 const auth = useAuthStore();
@@ -23,7 +25,7 @@ async function submit(): Promise<void> {
         await router.push('/dashboard');
     } catch (error) {
         errors.value = validationErrors(error);
-        message.value = Object.keys(errors.value).length ? '' : 'Login failed.';
+        message.value = Object.keys(errors.value).length ? '' : t('loginFailed');
     } finally {
         loading.value = false;
     }
@@ -32,6 +34,9 @@ async function submit(): Promise<void> {
 
 <template>
     <main class="grid min-h-screen place-items-center bg-background px-4">
+        <div class="fixed right-4 top-4 z-10">
+            <LanguageSwitcher />
+        </div>
         <form
             class="w-full max-w-md rounded-md border bg-card p-6 shadow-sm"
             @submit.prevent="submit"
@@ -43,16 +48,16 @@ async function submit(): Promise<void> {
                     <Trophy class="size-5" />
                 </span>
                 <div>
-                    <h1 class="text-xl font-semibold">Mundial 26 Predict</h1>
+                    <h1 class="text-xl font-semibold">{{ t('loginTitle') }}</h1>
                     <p class="text-sm text-muted-foreground">
-                        Login to your prediction account
+                        {{ t('loginSubtitle') }}
                     </p>
                 </div>
             </div>
 
             <div class="mt-6 grid gap-4">
                 <label class="grid gap-1 text-sm font-medium">
-                    Email
+                    {{ t('email') }}
                     <input
                         v-model="form.email"
                         class="rounded-md border bg-background px-3 py-2"
@@ -67,7 +72,7 @@ async function submit(): Promise<void> {
                     >
                 </label>
                 <label class="grid gap-1 text-sm font-medium">
-                    Password
+                    {{ t('password') }}
                     <input
                         v-model="form.password"
                         class="rounded-md border bg-background px-3 py-2"
@@ -92,15 +97,15 @@ async function submit(): Promise<void> {
                 type="submit"
                 :disabled="loading"
             >
-                {{ loading ? 'Signing in...' : 'Login' }}
+                {{ loading ? t('signingIn') : t('login') }}
             </button>
 
             <p class="mt-4 text-center text-sm text-muted-foreground">
-                No account?
+                {{ t('noAccount') }}
                 <RouterLink
                     class="font-medium text-foreground underline underline-offset-4"
                     to="/register"
-                    >Register</RouterLink
+                    >{{ t('register') }}</RouterLink
                 >
             </p>
         </form>

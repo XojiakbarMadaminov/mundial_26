@@ -4,17 +4,18 @@ import { computed, onMounted, ref } from 'vue';
 import MatchCard from '@/spa/components/MatchCard.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { formatDateKey } from '@/spa/lib/dates';
+import { t } from '@/spa/lib/i18n';
 import { useCompetitionStore } from '@/spa/stores/competition';
 
 const competition = useCompetitionStore();
 const filter = ref('all');
 
 const filters = [
-    { key: 'all', label: 'All' },
-    { key: 'today', label: 'Today' },
-    { key: 'upcoming', label: 'Upcoming' },
-    { key: 'finished', label: 'Finished' },
-    { key: 'open', label: 'Prediction open' },
+    { key: 'all', labelKey: 'all' },
+    { key: 'today', labelKey: 'today' },
+    { key: 'upcoming', labelKey: 'upcoming' },
+    { key: 'finished', labelKey: 'finished' },
+    { key: 'open', labelKey: 'predictionOpen' },
 ];
 
 const filteredMatches = computed(() => {
@@ -67,7 +68,7 @@ onMounted(() => {
 <template>
     <div class="grid gap-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
-            <h1 class="text-2xl font-semibold">Matches</h1>
+            <h1 class="text-2xl font-semibold">{{ t('matches') }}</h1>
             <div class="flex flex-wrap gap-2">
                 <button
                     v-for="item in filters"
@@ -81,14 +82,14 @@ onMounted(() => {
                     type="button"
                     @click="filter = item.key"
                 >
-                    {{ item.label }}
+                    {{ t(item.labelKey) }}
                 </button>
             </div>
         </div>
 
         <StateBlock
             v-if="filteredMatches.length === 0"
-            title="No matches found"
+            :title="t('noMatchesFound')"
         />
         <section
             v-for="(matches, date) in groups"

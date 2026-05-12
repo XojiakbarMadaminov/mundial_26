@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 
 import { api, validationErrors } from '@/spa/lib/api';
+import { t } from '@/spa/lib/i18n';
 import type { Match } from '@/spa/lib/types';
 
 const props = defineProps<{
@@ -24,11 +25,12 @@ const form = reactive({
 });
 
 const saving = ref(false);
+const savedSuccessfully = ref(false);
 const errors = ref<Record<string, string>>({});
 const message = ref('');
 const isPlayoff = computed(() => props.match.stage !== 'group');
-const homeTeamName = computed(() => props.match.home_team?.name ?? 'Home team');
-const awayTeamName = computed(() => props.match.away_team?.name ?? 'Away team');
+const homeTeamName = computed(() => props.match.home_team?.name ?? t('homeTeam'));
+const awayTeamName = computed(() => props.match.away_team?.name ?? t('awayTeam'));
 
 watch(
     () => props.match.my_prediction,
@@ -42,6 +44,7 @@ watch(
 
 async function submit(): Promise<void> {
     saving.value = true;
+    savedSuccessfully.value = false;
     errors.value = {};
     message.value = '';
 
@@ -63,13 +66,14 @@ async function submit(): Promise<void> {
             await api.post(`/matches/${props.match.id}/prediction`, payload);
         }
 
-        message.value = 'Prediction saved.';
+        message.value = t('predictionSaved');
+        savedSuccessfully.value = true;
         emit('saved');
     } catch (error) {
         errors.value = validationErrors(error);
         message.value = Object.keys(errors.value).length
             ? ''
-            : 'Could not save prediction.';
+            : t('couldNotSavePrediction');
     } finally {
         saving.value = false;
     }
@@ -152,7 +156,7 @@ async function submit(): Promise<void> {
             v-if="message"
             class="mt-3 text-sm"
             :class="
-                message.includes('saved')
+                savedSuccessfully
                     ? 'text-emerald-600'
                     : 'text-destructive'
             "
@@ -160,18 +164,18 @@ async function submit(): Promise<void> {
             {{ message }}
         </p>
 
-        <button
-            class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
-            type="submit"
-            :disabled="saving || match.is_prediction_locked"
-        >
-            {{
-                saving
-                    ? 'Saving...'
+                <button
+                class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+                type="submit"
+                :disabled="saving || match.is_prediction_locked"
+            >
+                {{
+                    saving
+                    ? t('saving')
                     : match.my_prediction
-                      ? 'Update prediction'
-                      : 'Submit prediction'
-            }}
+                      ? t('updatePrediction')
+                      : t('submitPrediction')
+                }}
         </button>
     </form>
 </template>

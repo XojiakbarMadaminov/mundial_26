@@ -4,6 +4,7 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { api, validationErrors } from '@/spa/lib/api';
 import { formatDateTime } from '@/spa/lib/dates';
+import { t } from '@/spa/lib/i18n';
 import type { NominationCategory } from '@/spa/lib/types';
 import { useCompetitionStore } from '@/spa/stores/competition';
 
@@ -11,6 +12,7 @@ const competition = useCompetitionStore();
 const values = reactive<Record<string, string | number | null>>({});
 const errors = ref<Record<string, string>>({});
 const saving = ref(false);
+const savedSuccessfully = ref(false);
 const message = ref('');
 const isLocked = computed(() => competition.nominationMeta?.is_locked ?? false);
 const errorMessage = computed(
@@ -63,13 +65,14 @@ async function save(): Promise<void> {
 
     if (categories.length === 0) {
         errors.value = {
-            predictions: 'Fill at least one nomination before saving.',
+            predictions: t('fillAtLeastOneNominationBeforeSaving'),
         };
 
         return;
     }
 
     saving.value = true;
+    savedSuccessfully.value = false;
     errors.value = {};
     message.value = '';
 
@@ -78,13 +81,14 @@ async function save(): Promise<void> {
             predictions: categories.map(payloadFor),
         });
 
-        message.value = 'Filled nominations saved.';
+        message.value = t('filledNominationsSaved');
+        savedSuccessfully.value = true;
         await load();
     } catch (error) {
         errors.value = validationErrors(error);
         message.value = Object.keys(errors.value).length
             ? ''
-            : 'Could not save nominations.';
+            : t('couldNotSaveNominations');
     } finally {
         saving.value = false;
     }
@@ -97,9 +101,9 @@ onMounted(load);
     <div class="grid gap-5">
         <div class="flex flex-wrap items-end justify-between gap-3">
             <div>
-                <h1 class="text-2xl font-semibold">Nominations</h1>
+                <h1 class="text-2xl font-semibold">{{ t('nominations') }}</h1>
                 <p class="mt-1 text-sm text-muted-foreground">
-                    Locks at
+                    {{ t('locksAt') }}
                     {{ formatDateTime(competition.nominationMeta?.lock_at) }}
                 </p>
             </div>
@@ -111,13 +115,13 @@ onMounted(load);
                         : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'
                 "
             >
-                {{ isLocked ? 'Locked' : 'Open' }}
+                {{ isLocked ? t('lockedLabel') : t('openLabel') }}
             </span>
         </div>
 
         <StateBlock
             v-if="competition.nominationCategories.length === 0"
-            title="No nomination categories"
+            :title="t('noNominationCategories')"
         />
 
         <form v-else class="grid gap-3" @submit.prevent="save()">
@@ -136,18 +140,18 @@ onMounted(load);
                         >{{ category.points }} points</span
                     >
                 </div>
-                <input
-                    :id="`nomination-${category.key}`"
-                    v-model="values[category.key]"
-                    class="mt-3 w-full rounded-md border bg-background px-3 py-2"
-                    :type="category.type === 'number' ? 'number' : 'text'"
-                    :disabled="isLocked"
-                    :placeholder="
-                        category.type === 'team'
-                            ? 'Team name'
+                    <input
+                        :id="`nomination-${category.key}`"
+                        v-model="values[category.key]"
+                        class="mt-3 w-full rounded-md border bg-background px-3 py-2"
+                        :type="category.type === 'number' ? 'number' : 'text'"
+                        :disabled="isLocked"
+                        :placeholder="
+                            category.type === 'team'
+                            ? t('teamName')
                             : category.type === 'number'
-                              ? 'Number'
-                              : 'Player name'
+                              ? t('number')
+                              : t('playerName')
                     "
                 />
             </div>
@@ -159,7 +163,7 @@ onMounted(load);
                 v-if="message"
                 class="text-sm"
                 :class="
-                    message.includes('saved')
+                    savedSuccessfully
                         ? 'text-emerald-600'
                         : 'text-destructive'
                 "
@@ -172,7 +176,7 @@ onMounted(load);
                 type="submit"
                 :disabled="saving || isLocked"
             >
-                {{ saving ? 'Saving...' : 'Save filled nominations' }}
+                {{ saving ? t('saving') : t('saveFilledNominations') }}
             </button>
         </form>
     </div>

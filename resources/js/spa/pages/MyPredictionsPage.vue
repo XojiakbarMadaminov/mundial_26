@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue';
 
 import MatchCard from '@/spa/components/MatchCard.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
+import { t } from '@/spa/lib/i18n';
 import { useCompetitionStore } from '@/spa/stores/competition';
 
 const competition = useCompetitionStore();
@@ -18,16 +19,16 @@ onMounted(() => {
 <template>
     <div class="grid gap-5">
         <div>
-            <h1 class="text-2xl font-semibold">My Predictions</h1>
+            <h1 class="text-2xl font-semibold">{{ t('myPredictions') }}</h1>
             <p class="mt-1 text-sm text-muted-foreground">
-                Submitted match predictions and calculated points.
+                {{ t('predictionsFromMatches') }}
             </p>
         </div>
 
         <StateBlock
             v-if="predictedMatches.length === 0"
-            title="No predictions yet"
-            message="Open matches from the Matches page and submit your scores."
+            :title="t('noPredictionsYet')"
+            :message="t('openMatchesHint')"
         />
 
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">

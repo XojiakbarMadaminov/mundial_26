@@ -33,7 +33,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida.",
+            'message' => __('auth.registration_pending'),
         ], 201);
     }
 
@@ -48,13 +48,13 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'The provided credentials are incorrect.',
+                'email' => __('auth.invalid_credentials'),
             ]);
         }
 
         if (! $user->is_approved) {
             throw ValidationException::withMessages([
-                'email' => 'Akkauntingiz moderatsiya jarayonida. Admin tasdiqlagandan keyin login qilishingiz mumkin.',
+                'email' => __('auth.pending_moderation'),
             ]);
         }
 
@@ -90,6 +90,6 @@ class AuthController extends Controller
             $token->delete();
         }
 
-        return ['message' => 'Logged out.'];
+        return ['message' => __('auth.logged_out')];
     }
 }

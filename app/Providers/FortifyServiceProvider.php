@@ -55,7 +55,7 @@ class FortifyServiceProvider extends ServiceProvider
 
             if (! $user->is_approved) {
                 throw ValidationException::withMessages([
-                    Fortify::username() => 'Akkauntingiz moderatsiya jarayonida. Admin tasdiqlagandan keyin login qilishingiz mumkin.',
+                    Fortify::username() => __('auth.pending_moderation'),
                 ]);
             }
 

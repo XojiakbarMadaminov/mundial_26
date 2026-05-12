@@ -3,6 +3,7 @@ import { Clock } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 
 import { formatDateTime, formatTime } from '@/spa/lib/dates';
+import { t, translateStage } from '@/spa/lib/i18n';
 import type { Match } from '@/spa/lib/types';
 
 defineProps<{
@@ -17,15 +18,15 @@ defineProps<{
                 <p
                     class="text-xs font-medium tracking-wide text-muted-foreground uppercase"
                 >
-                    {{ match.stage.replaceAll('_', ' ') }}
+                    {{ translateStage(match.stage) }}
                     <span v-if="match.group_name">
-                        · Group {{ match.group_name }}</span
+                        · {{ t('group') }} {{ match.group_name }}</span
                     >
                 </p>
                 <div class="mt-3 grid gap-2 text-sm">
                     <div class="flex items-center gap-2">
                         <span class="min-w-0 flex-1 font-medium">{{
-                            match.home_team?.name ?? 'TBD'
+                            match.home_team?.name ?? t('tbd')
                         }}</span>
                         <span
                             v-if="match.status === 'finished'"
@@ -35,7 +36,7 @@ defineProps<{
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="min-w-0 flex-1 font-medium">{{
-                            match.away_team?.name ?? 'TBD'
+                            match.away_team?.name ?? t('tbd')
                         }}</span>
                         <span
                             v-if="match.status === 'finished'"
@@ -54,22 +55,22 @@ defineProps<{
                         : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'
                 "
             >
-                {{ match.is_prediction_locked ? 'Locked' : 'Open' }}
+                {{ match.is_prediction_locked ? t('lockedLabel') : t('openLabel') }}
             </span>
         </div>
 
         <div class="mt-4 grid gap-2 text-xs text-muted-foreground">
             <p class="flex items-center gap-2">
                 <Clock class="size-4" />
-                Start: {{ formatDateTime(match.starts_at) }}
+                {{ t('start') }}: {{ formatDateTime(match.starts_at) }}
             </p>
-            <p>Lock: {{ formatTime(match.lock_at) }}</p>
+            <p>{{ t('lock') }}: {{ formatTime(match.lock_at) }}</p>
             <p v-if="match.my_prediction">
-                My prediction: {{ match.my_prediction.home_score }} -
+                {{ t('myPrediction') }}: {{ match.my_prediction.home_score }} -
                 {{ match.my_prediction.away_score }}
             </p>
-            <p v-else>No prediction yet</p>
-            <p v-if="match.points">Points: {{ match.points.total_points }}</p>
+            <p v-else>{{ t('noPredictionYet') }}</p>
+            <p v-if="match.points">{{ t('points') }}: {{ match.points.total_points }}</p>
         </div>
 
         <RouterLink
@@ -78,10 +79,10 @@ defineProps<{
         >
             {{
                 match.is_prediction_locked
-                    ? 'View match'
+                    ? t('viewMatch')
                     : match.my_prediction
-                      ? 'Edit prediction'
-                      : 'Submit prediction'
+                      ? t('matchEdit')
+                      : t('matchSubmit')
             }}
         </RouterLink>
     </article>

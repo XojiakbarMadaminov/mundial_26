@@ -3,6 +3,8 @@ import { Menu, Trophy } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
+import LanguageSwitcher from '@/spa/components/LanguageSwitcher.vue';
+import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
 
 const auth = useAuthStore();
@@ -11,12 +13,12 @@ const router = useRouter();
 const isOpen = ref(false);
 
 const navigation = [
-    { label: 'Dashboard', to: '/dashboard' },
-    { label: 'Matches', to: '/matches' },
-    { label: 'My Predictions', to: '/predictions' },
-    { label: 'Nominations', to: '/nominations' },
-    { label: 'Leaderboard', to: '/leaderboard' },
-    { label: 'Rules', to: '/rules' },
+    { labelKey: 'dashboard', to: '/dashboard' },
+    { labelKey: 'matches', to: '/matches' },
+    { labelKey: 'myPredictions', to: '/predictions' },
+    { labelKey: 'nominations', to: '/nominations' },
+    { labelKey: 'leaderboard', to: '/leaderboard' },
+    { labelKey: 'rules', to: '/rules' },
 ];
 
 const usesShell = computed(() => !['/login', '/register'].includes(route.path));
@@ -46,7 +48,7 @@ async function logout(): Promise<void> {
                     >
                         <Trophy class="size-5" />
                     </span>
-                    <span>Mundial 26 Predict</span>
+                    <span>{{ t('appName') }}</span>
                 </RouterLink>
 
                 <nav class="hidden items-center gap-1 lg:flex">
@@ -57,11 +59,12 @@ async function logout(): Promise<void> {
                         class="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                         active-class="bg-accent text-foreground"
                     >
-                        {{ item.label }}
+                        {{ t(item.labelKey) }}
                     </RouterLink>
                 </nav>
 
                 <div class="hidden items-center gap-3 lg:flex">
+                    <LanguageSwitcher />
                     <span class="text-sm text-muted-foreground">{{
                         auth.user?.name
                     }}</span>
@@ -70,7 +73,7 @@ async function logout(): Promise<void> {
                         type="button"
                         @click="logout"
                     >
-                        Logout
+                        {{ t('logout') }}
                     </button>
                 </div>
 
@@ -93,14 +96,17 @@ async function logout(): Promise<void> {
                         active-class="bg-accent text-foreground"
                         @click="isOpen = false"
                     >
-                        {{ item.label }}
+                        {{ t(item.labelKey) }}
                     </RouterLink>
+                    <div class="px-3 py-2">
+                        <LanguageSwitcher />
+                    </div>
                     <button
                         class="rounded-md px-3 py-2 text-left text-sm font-medium text-muted-foreground hover:bg-accent"
                         type="button"
                         @click="logout"
                     >
-                        Logout
+                        {{ t('logout') }}
                     </button>
                 </nav>
             </div>

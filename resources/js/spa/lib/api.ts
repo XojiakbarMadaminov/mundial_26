@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { currentLocale, localeToIntlTag } from '@/spa/lib/i18n';
+
 export const api = axios.create({
     baseURL: '/api',
     headers: {
@@ -8,11 +10,18 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('mundial_token');
+    const token =
+        typeof window !== 'undefined'
+            ? window.localStorage.getItem('mundial_token')
+            : null;
+    const locale = currentLocale();
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
+    config.headers['X-Locale'] = locale;
+    config.headers['Accept-Language'] = localeToIntlTag(locale);
 
     return config;
 });
