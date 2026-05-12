@@ -52,12 +52,10 @@ export const useAuthStore = defineStore('auth', {
             this.setSession(response.data.token, response.data.user);
         },
         async register(payload: RegisterPayload): Promise<void> {
-            const response = await api.post<{ token: string; user: User }>(
+            await api.post<{ message: string }>(
                 '/register',
                 payload,
             );
-
-            this.setSession(response.data.token, response.data.user);
         },
         async logout(): Promise<void> {
             try {

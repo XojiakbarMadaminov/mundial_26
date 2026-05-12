@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 
 import { validationErrors } from '@/spa/lib/api';
 import { useAuthStore } from '@/spa/stores/auth';
 
 const auth = useAuthStore();
-const router = useRouter();
 const form = reactive({
     name: '',
     email: '',
@@ -16,15 +15,24 @@ const form = reactive({
     password_confirmation: '',
 });
 const errors = ref<Record<string, string>>({});
+const message = ref('');
 const loading = ref(false);
 
 async function submit(): Promise<void> {
     loading.value = true;
     errors.value = {};
+    message.value = '';
 
     try {
         await auth.register(form);
-        await router.push('/dashboard');
+        form.name = '';
+        form.email = '';
+        form.telegram_username = '';
+        form.phone = '';
+        form.password = '';
+        form.password_confirmation = '';
+        message.value =
+            "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida, admin tasdiqlagandan keyin login qilishingiz mumkin.";
     } catch (error) {
         errors.value = validationErrors(error);
     } finally {
@@ -126,6 +134,13 @@ async function submit(): Promise<void> {
             >
                 {{ loading ? 'Creating...' : 'Register' }}
             </button>
+
+            <p
+                v-if="message"
+                class="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+            >
+                {{ message }}
+            </p>
 
             <p class="mt-4 text-center text-sm text-muted-foreground">
                 Already registered?

@@ -22,22 +22,18 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $user = User::query()->create([
+        User::query()->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'telegram_username' => $validated['telegram_username'] ?? null,
             'phone' => $validated['phone'] ?? null,
             'password' => Hash::make($validated['password']),
             'role' => 'user',
+            'is_approved' => false,
         ]);
 
         return response()->json([
-            'token' => $user->createToken('api')->plainTextToken,
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
+            'message' => "Ma'lumotlaringiz qabul qilindi. Akkauntingiz moderatsiya jarayonida.",
         ], 201);
     }
 
@@ -56,12 +52,19 @@ class AuthController extends Controller
             ]);
         }
 
+        if (! $user->is_approved) {
+            throw ValidationException::withMessages([
+                'email' => 'Akkauntingiz moderatsiya jarayonida. Admin tasdiqlagandan keyin login qilishingiz mumkin.',
+            ]);
+        }
+
         return [
             'token' => $user->createToken('api')->plainTextToken,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'is_approved' => $user->is_approved,
             ],
         ];
     }
@@ -75,6 +78,7 @@ class AuthController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'telegram_username' => $user->telegram_username,
+            'is_approved' => $user->is_approved,
         ];
     }
 

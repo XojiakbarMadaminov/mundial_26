@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -38,6 +39,9 @@ class UserForm
                     ])
                     ->required()
                     ->default('user'),
+                Toggle::make('is_approved')
+                    ->label('Approved')
+                    ->default(true),
             ]);
     }
 }

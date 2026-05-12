@@ -59,6 +59,18 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
+test('pending users can not authenticate', function () {
+    $user = User::factory()->pendingApproval()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertSessionHasErrors('email');
+});
+
 test('users can logout', function () {
     $user = User::factory()->create();
 

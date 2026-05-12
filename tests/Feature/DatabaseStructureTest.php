@@ -15,6 +15,7 @@ test('mundial prediction migrations define the expected core tables and constrai
     }
 })->with([
     'users' => ['0001_01_01_000000_create_users_table.php', ['telegram_username', 'phone', "'role', ['admin', 'user']", 'constrained()->nullOnDelete()']],
+    'user approval' => ['2026_05_12_110723_add_is_approved_to_users_table.php', ["boolean('is_approved')", 'default(true)', 'index()']],
     'tournaments' => ['2026_05_11_101754_create_tournaments_table.php', ["slug')->unique()", 'prediction_lock_minutes', "'status', ['upcoming', 'active', 'finished']"]],
     'teams' => ['2026_05_11_101755_create_teams_table.php', ["foreignId('tournament_id')->constrained()->cascadeOnDelete()", 'group_name', "index(['tournament_id', 'group_name'])"]],
     'tournament matches' => ['2026_05_11_101756_create_tournament_matches_table.php', ['tournament_matches', "constrained('teams')->nullOnDelete()", "'stage', ['group', 'round_32', 'round_16', 'quarter_final', 'semi_final', 'third_place', 'final']", 'points_calculated_at', "unique(['tournament_id', 'match_number'])"]],
@@ -33,7 +34,7 @@ test('mundial prediction models expose domain fillable fields and casts', functi
         expect($model->getCasts())->toHaveKey($attribute, $cast);
     }
 })->with([
-    'user' => [new User, ['name', 'telegram_username', 'email', 'phone', 'password', 'role'], ['password' => 'hashed', 'role' => 'string']],
+    'user' => [new User, ['name', 'telegram_username', 'email', 'phone', 'password', 'role', 'is_approved'], ['password' => 'hashed', 'role' => 'string', 'is_approved' => 'boolean']],
     'tournament' => [new Tournament, ['name', 'slug', 'starts_at', 'ends_at', 'prediction_lock_minutes', 'status'], ['starts_at' => 'datetime', 'prediction_lock_minutes' => 'integer']],
     'tournament match' => [new TournamentMatch, ['tournament_id', 'home_team_id', 'away_team_id', 'match_number', 'stage', 'group_name', 'starts_at', 'status', 'home_score', 'away_score', 'has_penalty', 'home_penalty_score', 'away_penalty_score', 'points_calculated_at'], ['starts_at' => 'datetime', 'has_penalty' => 'boolean', 'home_score' => 'integer']],
     'match prediction' => [new MatchPrediction, ['tournament_match_id', 'user_id', 'home_score', 'away_score', 'home_penalty_score', 'away_penalty_score', 'match_points', 'penalty_points', 'total_points', 'submitted_at', 'calculated_at'], ['submitted_at' => 'datetime', 'total_points' => 'integer']],

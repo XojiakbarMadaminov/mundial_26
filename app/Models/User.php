@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'telegram_username', 'email', 'phone', 'password', 'role'])]
+#[Fillable(['name', 'telegram_username', 'email', 'phone', 'password', 'role', 'is_approved'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -29,6 +29,7 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $attributes = [
         'role' => 'user',
+        'is_approved' => true,
     ];
 
     public function matchPredictions(): HasMany
@@ -61,6 +62,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_approved' => 'boolean',
             'role' => 'string',
             'two_factor_confirmed_at' => 'datetime',
         ];
