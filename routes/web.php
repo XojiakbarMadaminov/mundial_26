@@ -9,6 +9,7 @@ Route::view('/matches/{match}', 'frontend')->whereNumber('match')->name('matches
 Route::view('/predictions', 'frontend')->name('predictions.index');
 Route::view('/nominations', 'frontend')->name('nominations.index');
 Route::view('/leaderboard', 'frontend')->name('leaderboard.index');
+Route::view('/comparison', 'frontend')->name('comparison');
 Route::view('/rules', 'frontend')->name('rules');
 
 require __DIR__.'/settings.php';

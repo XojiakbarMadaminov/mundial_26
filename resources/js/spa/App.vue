@@ -18,6 +18,7 @@ const navigation = [
     { labelKey: 'myPredictions', to: '/predictions' },
     { labelKey: 'nominations', to: '/nominations' },
     { labelKey: 'leaderboard', to: '/leaderboard' },
+    { labelKey: 'comparison', to: '/comparison' },
     { labelKey: 'rules', to: '/rules' },
 ];
 

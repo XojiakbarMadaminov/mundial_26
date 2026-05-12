@@ -74,6 +74,82 @@ export type LeaderboardEntry = {
     total_points: number;
 };
 
+export type ComparisonParticipant = {
+    id: number;
+    name: string;
+    rank?: number | null;
+    match_points: number;
+    nomination_points: number;
+    total_points: number;
+    exact_scores_count: number;
+    goal_difference_count: number;
+    result_count: number;
+};
+
+export type ComparisonPrediction = {
+    id: number;
+    home_score?: number | null;
+    away_score?: number | null;
+    home_penalty_score?: number | null;
+    away_penalty_score?: number | null;
+    submitted_at?: string | null;
+    calculated_at?: string | null;
+    points?: {
+        match_points: number;
+        penalty_points: number;
+        total_points: number;
+    } | null;
+};
+
+export type ComparisonMatch = {
+    id: number;
+    stage: string;
+    group_name?: string | null;
+    status: string;
+    starts_at: string;
+    lock_at: string;
+    home_team: Team;
+    away_team: Team;
+    result?: {
+        home_score: number | null;
+        away_score: number | null;
+        home_penalty_score?: number | null;
+        away_penalty_score?: number | null;
+    } | null;
+    me_prediction?: ComparisonPrediction | null;
+    opponent_prediction?: ComparisonPrediction | null;
+};
+
+export type ComparisonNomination = {
+    id: number;
+    key: string;
+    name: string;
+    type: 'player' | 'team' | 'number' | 'text';
+    points: number;
+    me_prediction?: {
+        id: number;
+        value_text?: string | null;
+        value_number?: number | null;
+        points: number;
+        calculated_at?: string | null;
+    } | null;
+    opponent_prediction?: {
+        id: number;
+        value_text?: string | null;
+        value_number?: number | null;
+        points: number;
+        calculated_at?: string | null;
+    } | null;
+};
+
+export type ComparisonResponse = {
+    tournament: Tournament;
+    me: ComparisonParticipant;
+    opponent: ComparisonParticipant;
+    matches: ComparisonMatch[];
+    nominations: ComparisonNomination[];
+};
+
 export type NominationCategory = {
     id: number;
     key: string;

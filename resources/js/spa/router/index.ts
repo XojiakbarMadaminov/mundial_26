@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import DashboardPage from '@/spa/pages/DashboardPage.vue';
 import LeaderboardPage from '@/spa/pages/LeaderboardPage.vue';
+import ComparisonPage from '@/spa/pages/ComparisonPage.vue';
 import LoginPage from '@/spa/pages/LoginPage.vue';
 import MatchDetailPage from '@/spa/pages/MatchDetailPage.vue';
 import MatchesPage from '@/spa/pages/MatchesPage.vue';
@@ -39,6 +40,7 @@ export const router = createRouter({
             component: LeaderboardPage,
             meta: { auth: true },
         },
+        { path: '/comparison', component: ComparisonPage, meta: { auth: true } },
         { path: '/rules', component: RulesPage, meta: { auth: true } },
     ],
 });
