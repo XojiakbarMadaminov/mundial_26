@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['tournament_id', 'home_team_id', 'away_team_id', 'match_number', 'stage', 'group_name', 'starts_at', 'status', 'home_score', 'away_score', 'has_penalty', 'home_penalty_score', 'away_penalty_score', 'points_calculated_at'])]
+#[Fillable(['tournament_id', 'home_team_id', 'home_placeholder', 'away_team_id', 'away_placeholder', 'match_number', 'stage', 'group_name', 'starts_at', 'status', 'home_score', 'away_score', 'has_penalty', 'home_penalty_score', 'away_penalty_score', 'points_calculated_at', 'stadium', 'city', 'source', 'source_payload'])]
 class TournamentMatch extends Model
 {
     /**
@@ -50,7 +50,9 @@ class TournamentMatch extends Model
         return [
             'tournament_id' => 'integer',
             'home_team_id' => 'integer',
+            'home_placeholder' => 'string',
             'away_team_id' => 'integer',
+            'away_placeholder' => 'string',
             'match_number' => 'integer',
             'starts_at' => 'datetime',
             'home_score' => 'integer',
@@ -61,6 +63,7 @@ class TournamentMatch extends Model
             'points_calculated_at' => 'datetime',
             'stage' => 'string',
             'status' => 'string',
+            'source_payload' => 'array',
         ];
     }
 }

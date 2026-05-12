@@ -16,13 +16,13 @@ class NominationService
     public function defaultCategories(): array
     {
         return [
-            'best_player' => ['name' => 'Best player', 'type' => 'player', 'points' => 30, 'sort_order' => 10],
-            'best_goalkeeper' => ['name' => 'Best goalkeeper', 'type' => 'player', 'points' => 30, 'sort_order' => 20],
-            'goalkeeper_conceded_goals' => ['name' => 'Best goalkeeper conceded goals count', 'type' => 'number', 'points' => 30, 'sort_order' => 30],
-            'top_scorer' => ['name' => 'Top scorer', 'type' => 'player', 'points' => 30, 'sort_order' => 40],
-            'top_scorer_goals' => ['name' => 'Top scorer goals count', 'type' => 'number', 'points' => 30, 'sort_order' => 50],
+            'top_scorer' => ['name' => "To'purar", 'type' => 'player', 'points' => 30, 'sort_order' => 10],
+            'top_scorer_goals' => ['name' => "To'purar urgan gollari", 'type' => 'number', 'points' => 30, 'sort_order' => 20],
+            'best_player' => ['name' => 'Eng yaxshi futbolchi', 'type' => 'player', 'points' => 30, 'sort_order' => 30],
+            'best_goalkeeper' => ['name' => 'Eng yaxshi darvozabon', 'type' => 'player', 'points' => 30, 'sort_order' => 40],
+            'goalkeeper_conceded_goals' => ['name' => "Eng yaxshi darvozabon o'tkazgan gollari", 'type' => 'number', 'points' => 30, 'sort_order' => 50],
             'champion' => ['name' => 'Champion', 'type' => 'team', 'points' => 30, 'sort_order' => 60],
-            'worst_team' => ['name' => 'Worst team', 'type' => 'team', 'points' => 30, 'sort_order' => 70],
+            'worst_team' => ['name' => 'Muvaffaqiyatsiz jamoa', 'type' => 'team', 'points' => 30, 'sort_order' => 70],
         ];
     }
 

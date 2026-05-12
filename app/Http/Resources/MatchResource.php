@@ -17,6 +17,8 @@ class MatchResource extends JsonResource
     {
         $lockAt = $this->starts_at->copy()->subMinutes($this->tournament->prediction_lock_minutes);
         $myPrediction = $this->myPrediction();
+        $homeDisplayName = $this->relationLoaded('homeTeam') ? $this->homeTeam?->name : null;
+        $awayDisplayName = $this->relationLoaded('awayTeam') ? $this->awayTeam?->name : null;
 
         return [
             'id' => $this->id,
@@ -31,6 +33,8 @@ class MatchResource extends JsonResource
             'has_penalty' => $this->has_penalty,
             'home_team' => TeamResource::make($this->whenLoaded('homeTeam')),
             'away_team' => TeamResource::make($this->whenLoaded('awayTeam')),
+            'home_display_name' => $homeDisplayName ?? $this->home_placeholder,
+            'away_display_name' => $awayDisplayName ?? $this->away_placeholder,
             'my_prediction' => $myPrediction ? MatchPredictionResource::make($myPrediction) : null,
             'result' => $this->when($this->status === 'finished', [
                 'home_score' => $this->home_score,

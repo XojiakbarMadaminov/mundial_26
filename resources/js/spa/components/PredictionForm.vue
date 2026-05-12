@@ -27,6 +27,8 @@ const saving = ref(false);
 const errors = ref<Record<string, string>>({});
 const message = ref('');
 const isPlayoff = computed(() => props.match.stage !== 'group');
+const homeTeamName = computed(() => props.match.home_team?.name ?? 'Home team');
+const awayTeamName = computed(() => props.match.away_team?.name ?? 'Away team');
 
 watch(
     () => props.match.my_prediction,
@@ -78,7 +80,7 @@ async function submit(): Promise<void> {
     <form class="rounded-md border bg-card p-4" @submit.prevent="submit">
         <div class="grid gap-4 sm:grid-cols-2">
             <label class="grid gap-1 text-sm font-medium">
-                Home score
+                {{ homeTeamName }}
                 <input
                     v-model.number="form.home_score"
                     class="rounded-md border bg-background px-3 py-2"
@@ -94,7 +96,7 @@ async function submit(): Promise<void> {
                 >
             </label>
             <label class="grid gap-1 text-sm font-medium">
-                Away score
+                {{ awayTeamName }}
                 <input
                     v-model.number="form.away_score"
                     class="rounded-md border bg-background px-3 py-2"
@@ -113,7 +115,7 @@ async function submit(): Promise<void> {
 
         <div v-if="isPlayoff" class="mt-4 grid gap-4 sm:grid-cols-2">
             <label class="grid gap-1 text-sm font-medium">
-                Home penalties
+                {{ homeTeamName }} penalties
                 <input
                     v-model.number="form.home_penalty_score"
                     class="rounded-md border bg-background px-3 py-2"
@@ -129,7 +131,7 @@ async function submit(): Promise<void> {
                 >
             </label>
             <label class="grid gap-1 text-sm font-medium">
-                Away penalties
+                {{ awayTeamName }} penalties
                 <input
                     v-model.number="form.away_penalty_score"
                     class="rounded-md border bg-background px-3 py-2"

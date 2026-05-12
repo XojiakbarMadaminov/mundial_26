@@ -31,12 +31,20 @@ class TournamentMatchForm
                             ->label('Home team')
                             ->relationship('homeTeam', 'name')
                             ->searchable()
+                            ->live()
                             ->preload(),
+                        TextInput::make('home_placeholder')
+                            ->maxLength(255)
+                            ->visible(fn (Get $get): bool => blank($get('home_team_id'))),
                         Select::make('away_team_id')
                             ->label('Away team')
                             ->relationship('awayTeam', 'name')
                             ->searchable()
+                            ->live()
                             ->preload(),
+                        TextInput::make('away_placeholder')
+                            ->maxLength(255)
+                            ->visible(fn (Get $get): bool => blank($get('away_team_id'))),
                         Select::make('stage')
                             ->options([
                                 'group' => 'Group',
@@ -49,6 +57,10 @@ class TournamentMatchForm
                             ])
                             ->required(),
                         TextInput::make('group_name')
+                            ->maxLength(255),
+                        TextInput::make('stadium')
+                            ->maxLength(255),
+                        TextInput::make('city')
                             ->maxLength(255),
                         DateTimePicker::make('starts_at')
                             ->required(),
