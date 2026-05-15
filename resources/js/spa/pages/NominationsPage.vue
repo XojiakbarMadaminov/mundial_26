@@ -12,7 +12,9 @@ import { useCompetitionStore } from '@/spa/stores/competition';
 const competition = useCompetitionStore();
 const values = reactive<Record<string, string | number | null>>({});
 const optionSearches = reactive<Record<string, string>>({});
+const selectedOptionLabels = reactive<Record<string, string>>({});
 const options = reactive<Record<string, NominationOption[]>>({});
+const openOptionKey = ref<string | null>(null);
 const errors = ref<Record<string, string>>({});
 const saving = ref(false);
 const savedSuccessfully = ref(false);
@@ -55,6 +57,11 @@ async function load(): Promise<void> {
                     : (prediction?.value_text ?? '');
 
         if (category.type === 'player' || category.type === 'team') {
+            selectedOptionLabels[category.key] =
+                category.type === 'player'
+                    ? (prediction?.player?.name ?? '')
+                    : (prediction?.team?.name ?? '');
+            optionSearches[category.key] = selectedOptionLabels[category.key];
             await loadOptions(category);
         }
     }
@@ -109,6 +116,55 @@ async function loadOptions(category: NominationCategory): Promise<void> {
     );
 
     options[category.key] = response.data.data;
+}
+
+async function openOptions(category: NominationCategory): Promise<void> {
+    openOptionKey.value = category.key;
+    optionSearches[category.key] = selectedOptionLabels[category.key] ?? '';
+    await loadOptions(category);
+}
+
+async function searchOptions(category: NominationCategory): Promise<void> {
+    values[category.key] = null;
+    selectedOptionLabels[category.key] = '';
+    openOptionKey.value = category.key;
+    await loadOptions(category);
+}
+
+function selectOption(
+    category: NominationCategory,
+    option: NominationOption,
+): void {
+    values[category.key] = option.id;
+    selectedOptionLabels[category.key] = optionLabel(option);
+    optionSearches[category.key] = selectedOptionLabels[category.key];
+    options[category.key] = [
+        option,
+        ...(options[category.key] ?? []).filter((item) => item.id !== option.id),
+    ];
+    openOptionKey.value = null;
+}
+
+function closeOptions(category: NominationCategory, event: FocusEvent): void {
+    const nextFocusedElement = event.relatedTarget;
+
+    if (
+        nextFocusedElement instanceof Node &&
+        event.currentTarget instanceof HTMLElement &&
+        event.currentTarget.contains(nextFocusedElement)
+    ) {
+        return;
+    }
+
+    window.setTimeout(() => {
+        if (openOptionKey.value === category.key) {
+            openOptionKey.value = null;
+        }
+    }, 150);
+}
+
+function selectPlaceholder(category: NominationCategory): string {
+    return category.type === 'team' ? t('selectTeam') : t('selectPlayer');
 }
 
 function optionLabel(option: NominationOption): string {
@@ -205,41 +261,72 @@ onMounted(load);
                 </div>
                 <div
                     v-if="category.type === 'player' || category.type === 'team'"
-                    class="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+                    class="relative mt-3"
+                    @focusout="closeOptions(category, $event)"
                 >
-                    <input
-                        v-model="optionSearches[category.key]"
-                        class="w-full rounded-md border bg-background px-3 py-2"
-                        type="search"
-                        :disabled="isLocked"
-                        :placeholder="
-                            category.type === 'team'
-                                ? t('searchTeam')
-                                : t('searchPlayer')
-                        "
-                        @input="loadOptions(category)"
-                    />
-                    <select
+                    <button
                         :id="`nomination-${category.key}`"
-                        v-model.number="values[category.key]"
-                        class="w-full rounded-md border bg-background px-3 py-2"
+                        class="flex w-full items-center justify-between gap-3 rounded-md border bg-background px-3 py-2 text-left"
+                        type="button"
+                        role="combobox"
+                        :aria-expanded="openOptionKey === category.key"
+                        :aria-controls="`nomination-options-${category.key}`"
                         :disabled="isLocked"
+                        @click="openOptions(category)"
+                        @keydown.escape="openOptionKey = null"
                     >
-                        <option :value="null">
+                        <span
+                            class="truncate"
+                            :class="
+                                selectedOptionLabels[category.key]
+                                    ? 'text-foreground'
+                                    : 'text-muted-foreground'
+                            "
+                        >
                             {{
-                                category.type === 'team'
-                                    ? t('selectTeam')
-                                    : t('selectPlayer')
+                                selectedOptionLabels[category.key] ||
+                                selectPlaceholder(category)
                             }}
-                        </option>
-                        <option
+                        </span>
+                        <span class="text-muted-foreground">⌄</span>
+                    </button>
+                    <div
+                        v-if="openOptionKey === category.key"
+                        :id="`nomination-options-${category.key}`"
+                        class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover p-1 shadow-md"
+                        role="listbox"
+                    >
+                        <input
+                            v-model="optionSearches[category.key]"
+                            class="mb-1 w-full rounded-sm border bg-background px-3 py-2 text-sm"
+                            type="search"
+                            autocomplete="off"
+                            :placeholder="
+                                category.type === 'team'
+                                    ? t('searchTeam')
+                                    : t('searchPlayer')
+                            "
+                            @input="searchOptions(category)"
+                            @keydown.escape="openOptionKey = null"
+                        />
+                        <button
                             v-for="option in options[category.key] ?? []"
                             :key="option.id"
-                            :value="option.id"
+                            class="w-full rounded-sm px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                            type="button"
+                            role="option"
+                            :aria-selected="values[category.key] === option.id"
+                            @mousedown.prevent="selectOption(category, option)"
                         >
                             {{ optionLabel(option) }}
-                        </option>
-                    </select>
+                        </button>
+                        <p
+                            v-if="(options[category.key] ?? []).length === 0"
+                            class="px-3 py-2 text-sm text-muted-foreground"
+                        >
+                            {{ t('noOptionsFound') }}
+                        </p>
+                    </div>
                 </div>
                 <input
                     v-else
