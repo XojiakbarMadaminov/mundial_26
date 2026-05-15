@@ -37,6 +37,33 @@ const badge = computed(() => {
 
 const safeRankText = computed(() => (props.rank ? `#${props.rank}` : '#-'));
 
+function splitIntoLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+        const candidate = currentLine ? `${currentLine} ${word}` : word;
+
+        if (ctx.measureText(candidate).width <= maxWidth) {
+            currentLine = candidate;
+            continue;
+        }
+
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+
+        currentLine = word;
+    }
+
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+
+    return lines;
+}
+
 function renderShareCard(): Promise<Blob> {
     return new Promise((resolve, reject) => {
         const width = 1200;
@@ -111,7 +138,22 @@ function renderShareCard(): Promise<Blob> {
         ctx.fillText(t('shareBadgeLabel'), 860, 390);
         ctx.fillStyle = '#ffffff';
         ctx.font = '700 36px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif';
-        ctx.fillText(t(badge.value.key), 860, 436);
+        const badgeText = t(badge.value.key);
+        const badgeLines = splitIntoLines(ctx, badgeText, 300);
+
+        if (badgeLines.length <= 1) {
+            ctx.fillText(badgeText, 860, 436);
+        } else {
+            ctx.fillText(badgeLines[0], 860, 432);
+
+            const secondLine = badgeLines.slice(1).join(' ');
+            const lineToRender =
+                ctx.measureText(secondLine).width > 300
+                    ? `${secondLine.slice(0, 21).trimEnd()}...`
+                    : secondLine;
+
+            ctx.fillText(lineToRender, 860, 474);
+        }
 
         ctx.fillStyle = 'rgba(248, 250, 252, 0.8)';
         ctx.font = '500 22px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif';

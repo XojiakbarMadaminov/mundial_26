@@ -49,6 +49,23 @@ class Tournament extends Model
         return $this->hasMany(LeaderboardEntry::class);
     }
 
+    public static function resolveCurrent(): self
+    {
+        return static::query()
+            ->where('status', 'active')
+            ->orderBy('starts_at')
+            ->first()
+            ?? static::query()
+                ->where('status', 'upcoming')
+                ->orderBy('starts_at')
+                ->first()
+            ?? static::query()
+                ->where('status', 'finished')
+                ->orderByRaw('coalesce(ends_at, starts_at) desc')
+                ->orderByDesc('id')
+                ->firstOrFail();
+    }
+
     /**
      * Get the attributes that should be cast.
      *

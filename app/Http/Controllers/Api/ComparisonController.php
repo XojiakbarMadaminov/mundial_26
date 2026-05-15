@@ -201,13 +201,6 @@ class ComparisonController extends Controller
 
     private function currentTournament(): Tournament
     {
-        return Tournament::query()
-            ->where('status', 'active')
-            ->orderBy('starts_at')
-            ->first()
-            ?? Tournament::query()
-                ->where('status', 'upcoming')
-                ->orderBy('starts_at')
-                ->firstOrFail();
+        return Tournament::resolveCurrent();
     }
 }
