@@ -16,16 +16,17 @@ class TeamsTable
     {
         return $table
             ->columns([
-                TextColumn::make('tournament.name')->sortable()->searchable(),
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('code')->searchable(),
-                TextColumn::make('group_name')->sortable(),
+                TextColumn::make('tournament.name')->label(__('admin.fields.tournament'))->sortable()->searchable(),
+                TextColumn::make('name')->label(__('admin.fields.name'))->searchable()->sortable(),
+                TextColumn::make('code')->label(__('admin.fields.code'))->searchable(),
+                TextColumn::make('group_name')->label(__('admin.fields.group'))->sortable(),
             ])
             ->filters([
                 SelectFilter::make('tournament')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name'),
                 SelectFilter::make('group_name')
-                    ->label('Group')
+                    ->label(__('admin.fields.group'))
                     ->options(fn (): array => Team::query()
                         ->whereNotNull('group_name')
                         ->distinct()

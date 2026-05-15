@@ -4,6 +4,8 @@ namespace App\Actions;
 
 use App\Models\NominationCategory;
 use App\Models\NominationPrediction;
+use App\Models\Player;
+use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\User;
 use App\Services\NominationService;
@@ -18,7 +20,7 @@ class SubmitNominationPredictionsAction
     ) {}
 
     /**
-     * @param  array<int, array{category_key: string, value_text?: string|null, value_number?: int|null}>  $predictions
+     * @param  array<int, array{category_key: string, player_id?: int|null, team_id?: int|null, value_text?: string|null, value_number?: int|null}>  $predictions
      * @return Collection<int, NominationPrediction>
      */
     public function execute(Tournament $tournament, User $user, array $predictions): Collection
@@ -58,14 +60,14 @@ class SubmitNominationPredictionsAction
                         'points' => 0,
                         'calculated_at' => null,
                     ],
-                )->load('nominationCategory');
+                )->load(['nominationCategory', 'player', 'team']);
             })->values();
         });
     }
 
     /**
-     * @param  array{category_key: string, value_text?: string|null, value_number?: int|null}  $prediction
-     * @return array{value_text: string|null, value_number: int|null}
+     * @param  array{category_key: string, player_id?: int|null, team_id?: int|null, value_text?: string|null, value_number?: int|null}  $prediction
+     * @return array{player_id: int|null, team_id: int|null, value_text: string|null, value_number: int|null}
      */
     private function payloadForCategory(NominationCategory $category, array $prediction): array
     {
@@ -77,8 +79,44 @@ class SubmitNominationPredictionsAction
             }
 
             return [
+                'player_id' => null,
+                'team_id' => null,
                 'value_text' => null,
                 'value_number' => (int) $prediction['value_number'],
+            ];
+        }
+
+        if ($category->type === 'player') {
+            $playerId = (int) ($prediction['player_id'] ?? 0);
+
+            if ($playerId < 1 || ! Player::query()->whereKey($playerId)->where('tournament_id', $category->tournament_id)->exists()) {
+                throw ValidationException::withMessages([
+                    'predictions' => "A valid player is required for [{$category->key}].",
+                ]);
+            }
+
+            return [
+                'player_id' => $playerId,
+                'team_id' => null,
+                'value_text' => null,
+                'value_number' => null,
+            ];
+        }
+
+        if ($category->type === 'team') {
+            $teamId = (int) ($prediction['team_id'] ?? 0);
+
+            if ($teamId < 1 || ! Team::query()->whereKey($teamId)->where('tournament_id', $category->tournament_id)->exists()) {
+                throw ValidationException::withMessages([
+                    'predictions' => "A valid team is required for [{$category->key}].",
+                ]);
+            }
+
+            return [
+                'player_id' => null,
+                'team_id' => $teamId,
+                'value_text' => null,
+                'value_number' => null,
             ];
         }
 
@@ -89,6 +127,8 @@ class SubmitNominationPredictionsAction
         }
 
         return [
+            'player_id' => null,
+            'team_id' => null,
             'value_text' => $this->nominationService->normalizeText((string) $prediction['value_text']),
             'value_number' => null,
         ];

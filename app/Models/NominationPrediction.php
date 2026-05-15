@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['tournament_id', 'nomination_category_id', 'user_id', 'value_text', 'value_number', 'points', 'calculated_at'])]
+#[Fillable(['tournament_id', 'nomination_category_id', 'user_id', 'player_id', 'team_id', 'value_text', 'value_number', 'points', 'calculated_at'])]
 class NominationPrediction extends Model
 {
     /**
@@ -33,6 +33,16 @@ class NominationPrediction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function player(): BelongsTo
+    {
+        return $this->belongsTo(Player::class);
+    }
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -44,6 +54,8 @@ class NominationPrediction extends Model
             'tournament_id' => 'integer',
             'nomination_category_id' => 'integer',
             'user_id' => 'integer',
+            'player_id' => 'integer',
+            'team_id' => 'integer',
             'value_number' => 'integer',
             'points' => 'integer',
             'calculated_at' => 'datetime',

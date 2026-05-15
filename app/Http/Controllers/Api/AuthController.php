@@ -17,8 +17,8 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'telegram_username' => ['nullable', 'string', 'max:255', 'unique:users,telegram_username'],
-            'phone' => ['nullable', 'string', 'max:255', 'unique:users,phone'],
+            'telegram_username' => ['nullable', 'string', 'max:255', 'unique:users,telegram_username', 'required_without:phone'],
+            'phone' => ['nullable', 'string', 'max:255', 'unique:users,phone', 'required_without:telegram_username'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 

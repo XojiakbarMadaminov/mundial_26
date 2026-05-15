@@ -22,21 +22,25 @@ class NominationResultsTable
     {
         return $table
             ->columns([
-                TextColumn::make('tournament.name')->sortable()->searchable(),
-                TextColumn::make('nominationCategory.name')->label('Category')->sortable()->searchable(),
-                TextColumn::make('value_text')->searchable(),
-                TextColumn::make('value_number')->sortable(),
+                TextColumn::make('tournament.name')->label(__('admin.fields.tournament'))->sortable()->searchable(),
+                TextColumn::make('nominationCategory.name')->label(__('admin.fields.category'))->sortable()->searchable(),
+                TextColumn::make('player.name')->label(__('admin.fields.player'))->searchable(),
+                TextColumn::make('team.name')->label(__('admin.fields.team'))->searchable(),
+                TextColumn::make('value_text')->label(__('admin.fields.value_text'))->searchable(),
+                TextColumn::make('value_number')->label(__('admin.fields.value_number'))->sortable(),
             ])
             ->filters([
                 SelectFilter::make('tournament')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name'),
                 SelectFilter::make('nominationCategory')
+                    ->label(__('admin.fields.nomination_category'))
                     ->relationship('nominationCategory', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),
                 Action::make('recalculateNominationPoints')
-                    ->label('Recalculate Nomination Points')
+                    ->label(__('admin.actions.recalculate_nomination_points'))
                     ->icon('heroicon-o-calculator')
                     ->requiresConfirmation()
                     ->action(function (NominationResult $record): void {
@@ -44,12 +48,12 @@ class NominationResultsTable
                             app(RecalculateNominationPointsAction::class)->execute($record->tournament_id);
 
                             Notification::make()
-                                ->title('Nomination points recalculated')
+                                ->title(__('admin.notifications.nomination_points_recalculated'))
                                 ->success()
                                 ->send();
                         } catch (ValidationException|DomainException $exception) {
                             Notification::make()
-                                ->title('Could not recalculate nomination points')
+                                ->title(__('admin.notifications.unable_to_recalculate_nomination_points'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->send();
@@ -57,8 +61,8 @@ class NominationResultsTable
                             report($exception);
 
                             Notification::make()
-                                ->title('Could not recalculate nomination points')
-                                ->body('Unexpected error while recalculating nomination points.')
+                                ->title(__('admin.notifications.unable_to_recalculate_nomination_points'))
+                                ->body(__('admin.notifications.unexpected_nomination_recalculation_error'))
                                 ->danger()
                                 ->send();
                         }

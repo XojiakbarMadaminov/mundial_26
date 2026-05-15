@@ -39,6 +39,21 @@ class NominationCategoryResource extends Resource
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.nomination_category.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.nomination_category.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.nomination_category.plural');
+    }
+
     public static function getPages(): array
     {
         return [

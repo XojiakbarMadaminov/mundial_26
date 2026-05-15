@@ -26,6 +26,8 @@ class StoreNominationPredictionsRequest extends FormRequest
         return [
             'predictions' => ['required', 'array', 'min:1'],
             'predictions.*.category_key' => ['required', 'string'],
+            'predictions.*.player_id' => ['nullable', 'integer', 'min:1'],
+            'predictions.*.team_id' => ['nullable', 'integer', 'min:1'],
             'predictions.*.value_text' => ['nullable', 'string', 'max:255'],
             'predictions.*.value_number' => ['nullable', 'integer', 'min:0', 'max:999'],
         ];

@@ -15,18 +15,19 @@ class TournamentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('slug')->searchable(),
-                TextColumn::make('starts_at')->dateTime()->sortable(),
-                TextColumn::make('status')->badge()->sortable(),
-                TextColumn::make('prediction_lock_minutes')->sortable(),
+                TextColumn::make('name')->label(__('admin.fields.name'))->searchable()->sortable(),
+                TextColumn::make('slug')->label(__('admin.fields.slug'))->searchable(),
+                TextColumn::make('starts_at')->label(__('admin.fields.starts_at'))->dateTime()->sortable(),
+                TextColumn::make('status')->label(__('admin.fields.status'))->badge()->sortable(),
+                TextColumn::make('prediction_lock_minutes')->label(__('admin.fields.prediction_lock_minutes'))->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('admin.fields.status'))
                     ->options([
-                        'upcoming' => 'Upcoming',
-                        'active' => 'Active',
-                        'finished' => 'Finished',
+                        'upcoming' => __('admin.options.upcoming'),
+                        'active' => __('admin.options.active'),
+                        'finished' => __('admin.options.finished'),
                     ]),
             ])
             ->recordActions([

@@ -13,14 +13,15 @@ class TeamForm
         return $schema
             ->components([
                 Select::make('tournament_id')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
-                TextInput::make('name')->required()->maxLength(255),
-                TextInput::make('code')->maxLength(255),
-                TextInput::make('flag')->maxLength(255),
-                TextInput::make('group_name')->maxLength(255),
+                TextInput::make('name')->label(__('admin.fields.name'))->required()->maxLength(255),
+                TextInput::make('code')->label(__('admin.fields.code'))->maxLength(255),
+                TextInput::make('flag')->label(__('admin.fields.flag'))->maxLength(255),
+                TextInput::make('group_name')->label(__('admin.fields.group_name'))->maxLength(255),
             ]);
     }
 }

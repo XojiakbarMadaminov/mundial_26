@@ -8,6 +8,7 @@ use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -21,33 +22,34 @@ class UsersTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('telegram_username')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('phone')->searchable(),
-                TextColumn::make('role')->badge()->sortable(),
+                TextColumn::make('name')->label(__('admin.fields.name'))->searchable()->sortable(),
+                TextColumn::make('telegram_username')->label(__('admin.fields.telegram_username'))->searchable(),
+                TextColumn::make('email')->label(__('admin.fields.email'))->searchable(),
+                TextColumn::make('phone')->label(__('admin.fields.phone'))->searchable(),
+                TextColumn::make('role')->label(__('admin.fields.role'))->badge()->sortable(),
                 IconColumn::make('is_approved')
-                    ->label('Approved')
+                    ->label(__('admin.fields.approved'))
                     ->boolean()
                     ->sortable(),
-                TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('created_at')->label(__('admin.fields.created_at'))->dateTime()->sortable(),
             ])
             ->filters([
                 SelectFilter::make('role')
+                    ->label(__('admin.fields.role'))
                     ->options([
-                        'admin' => 'Admin',
-                        'user' => 'User',
+                        'admin' => __('admin.options.admin'),
+                        'user' => __('admin.options.user'),
                     ]),
                 SelectFilter::make('is_approved')
-                    ->label('Approval')
+                    ->label(__('admin.fields.approval'))
                     ->options([
-                        '1' => 'Approved',
-                        '0' => 'Pending',
+                        '1' => __('admin.fields.approved'),
+                        '0' => __('admin.options.pending'),
                     ]),
             ])
             ->recordActions([
                 Action::make('approve')
-                    ->label('Approve')
+                    ->label(__('admin.actions.approve'))
                     ->color('success')
                     ->requiresConfirmation()
                     ->visible(fn (User $record): bool => ! $record->is_approved)
@@ -55,23 +57,24 @@ class UsersTable
                         $record->update(['is_approved' => true]);
 
                         Notification::make()
-                            ->title('User approved')
+                            ->title(__('admin.notifications.user_approved'))
                             ->success()
                             ->send();
                     }),
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAction::make('approve')
-                        ->label('Approve selected')
+                        ->label(__('admin.actions.approve_selected'))
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
                             $records->each->update(['is_approved' => true]);
 
                             Notification::make()
-                                ->title('Selected users approved')
+                                ->title(__('admin.notifications.selected_users_approved'))
                                 ->success()
                                 ->send();
                         }),

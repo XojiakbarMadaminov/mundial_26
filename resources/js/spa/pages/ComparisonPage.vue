@@ -67,6 +67,8 @@ function predictionLabel(
 function nominationLabel(
     prediction:
         | {
+              player?: { name: string } | null;
+              team?: { name: string } | null;
               value_text?: string | null;
               value_number?: number | null;
           }
@@ -75,6 +77,14 @@ function nominationLabel(
 ): string {
     if (!prediction) {
         return t('tbd');
+    }
+
+    if (prediction.player) {
+        return prediction.player.name;
+    }
+
+    if (prediction.team) {
+        return prediction.team.name;
     }
 
     if (prediction.value_text) {

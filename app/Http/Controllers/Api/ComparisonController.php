@@ -141,7 +141,7 @@ class ComparisonController extends Controller
     private function nominationPredictionsForUsers(int $tournamentId, Collection $participantIds): Collection
     {
         return NominationPrediction::query()
-            ->with('nominationCategory')
+            ->with(['nominationCategory', 'player', 'team'])
             ->where('nomination_predictions.tournament_id', $tournamentId)
             ->whereIn('nomination_predictions.user_id', $participantIds)
             ->join('nomination_categories', 'nomination_predictions.nomination_category_id', '=', 'nomination_categories.id')
@@ -182,6 +182,16 @@ class ComparisonController extends Controller
 
         return [
             'id' => $prediction->id,
+            'player_id' => $prediction->player_id,
+            'player' => $prediction->player ? [
+                'id' => $prediction->player->id,
+                'name' => $prediction->player->name,
+            ] : null,
+            'team_id' => $prediction->team_id,
+            'team' => $prediction->team ? [
+                'id' => $prediction->team->id,
+                'name' => $prediction->team->name,
+            ] : null,
             'value_text' => $prediction->value_text,
             'value_number' => $prediction->value_number,
             'points' => $prediction->points,

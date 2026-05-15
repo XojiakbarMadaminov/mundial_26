@@ -14,33 +14,39 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('admin.fields.name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('telegram_username')
+                    ->label(__('admin.fields.telegram_username'))
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('email')
+                    ->label(__('admin.fields.email'))
                     ->email()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('phone')
+                    ->label(__('admin.fields.phone'))
                     ->tel()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 TextInput::make('password')
+                    ->label(__('admin.fields.password'))
                     ->password()
                     ->required(fn ($record): bool => $record === null)
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->maxLength(255),
                 Select::make('role')
+                    ->label(__('admin.fields.role'))
                     ->options([
-                        'admin' => 'Admin',
-                        'user' => 'User',
+                        'admin' => __('admin.options.admin'),
+                        'user' => __('admin.options.user'),
                     ])
                     ->required()
                     ->default('user'),
                 Toggle::make('is_approved')
-                    ->label('Approved')
+                    ->label(__('admin.fields.approved'))
                     ->default(true),
             ]);
     }

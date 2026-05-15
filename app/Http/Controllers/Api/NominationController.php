@@ -50,7 +50,7 @@ class NominationController extends Controller
     {
         return NominationPredictionResource::collection(
             NominationPrediction::query()
-                ->with('nominationCategory')
+                ->with(['nominationCategory', 'player', 'team'])
                 ->where('nomination_predictions.tournament_id', $this->currentTournament()->id)
                 ->where('nomination_predictions.user_id', $request->user()->id)
                 ->join('nomination_categories', 'nomination_predictions.nomination_category_id', '=', 'nomination_categories.id')

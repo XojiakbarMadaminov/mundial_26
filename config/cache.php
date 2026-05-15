@@ -15,7 +15,9 @@ return [
     |
     */
 
-    'default' => env('CACHE_STORE', 'database'),
+    'default' => env('APP_ENV') === 'local'
+        ? env('LOCAL_CACHE_STORE', 'file')
+        : env('CACHE_STORE', 'database'),
 
     /*
     |--------------------------------------------------------------------------

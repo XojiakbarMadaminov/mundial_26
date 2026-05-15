@@ -5,10 +5,13 @@ namespace App\Filament\Resources\Users;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
 use BackedEnum;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -32,6 +35,20 @@ class UserResource extends Resource
         return UsersTable::configure($table);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('name')->label(__('admin.fields.name')),
+                TextEntry::make('telegram_username')->label(__('admin.fields.telegram_username'))->placeholder('-'),
+                TextEntry::make('email')->label(__('admin.fields.email'))->placeholder('-'),
+                TextEntry::make('phone')->label(__('admin.fields.phone'))->placeholder('-'),
+                TextEntry::make('role')->label(__('admin.fields.role'))->badge(),
+                IconEntry::make('is_approved')->label(__('admin.fields.approved'))->boolean(),
+                TextEntry::make('created_at')->label(__('admin.fields.created_at'))->dateTime(),
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -39,11 +56,27 @@ class UserResource extends Resource
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.user.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.user.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.user.plural');
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
+            'view' => ViewUser::route('/{record}'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }

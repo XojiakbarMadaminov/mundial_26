@@ -128,6 +128,14 @@ export type ComparisonNomination = {
     points: number;
     me_prediction?: {
         id: number;
+        player?: {
+            id: number;
+            name: string;
+        } | null;
+        team?: {
+            id: number;
+            name: string;
+        } | null;
         value_text?: string | null;
         value_number?: number | null;
         points: number;
@@ -135,6 +143,14 @@ export type ComparisonNomination = {
     } | null;
     opponent_prediction?: {
         id: number;
+        player?: {
+            id: number;
+            name: string;
+        } | null;
+        team?: {
+            id: number;
+            name: string;
+        } | null;
         value_text?: string | null;
         value_number?: number | null;
         points: number;
@@ -162,6 +178,16 @@ export type NominationCategory = {
 export type NominationPrediction = {
     id: number;
     nomination_category_id: number;
+    player_id?: number | null;
+    player?: {
+        id: number;
+        name: string;
+    } | null;
+    team_id?: number | null;
+    team?: {
+        id: number;
+        name: string;
+    } | null;
     value_text?: string | null;
     value_number?: number | null;
     points: number;

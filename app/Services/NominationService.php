@@ -40,11 +40,37 @@ class NominationService
                     : 0;
         }
 
-        return $prediction->value_text !== null
-            && $result->value_text !== null
-            && $this->normalizeText($prediction->value_text) === $this->normalizeText($result->value_text)
-                ? $category->points
-                : 0;
+        if ($category->type === 'player') {
+            return $this->sameSelectedValue($prediction->player_id, $result->player_id)
+                || $this->sameTextValue($prediction->value_text, $result->value_text)
+                    ? $category->points
+                    : 0;
+        }
+
+        if ($category->type === 'team') {
+            return $this->sameSelectedValue($prediction->team_id, $result->team_id)
+                || $this->sameTextValue($prediction->value_text, $result->value_text)
+                    ? $category->points
+                    : 0;
+        }
+
+        return $this->sameTextValue($prediction->value_text, $result->value_text)
+            ? $category->points
+            : 0;
+    }
+
+    private function sameSelectedValue(?int $predictionValue, ?int $resultValue): bool
+    {
+        return $predictionValue !== null
+            && $resultValue !== null
+            && $predictionValue === $resultValue;
+    }
+
+    private function sameTextValue(?string $predictionValue, ?string $resultValue): bool
+    {
+        return $predictionValue !== null
+            && $resultValue !== null
+            && $this->normalizeText($predictionValue) === $this->normalizeText($resultValue);
     }
 
     public function normalizeText(string $value): string

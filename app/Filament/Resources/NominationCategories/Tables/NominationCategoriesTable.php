@@ -15,22 +15,24 @@ class NominationCategoriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('tournament.name')->sortable()->searchable(),
-                TextColumn::make('key')->searchable(),
-                TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('type')->badge()->sortable(),
-                TextColumn::make('points')->sortable(),
-                TextColumn::make('sort_order')->sortable(),
+                TextColumn::make('tournament.name')->label(__('admin.fields.tournament'))->sortable()->searchable(),
+                TextColumn::make('key')->label(__('admin.fields.key'))->searchable(),
+                TextColumn::make('name')->label(__('admin.fields.name'))->searchable()->sortable(),
+                TextColumn::make('type')->label(__('admin.fields.type'))->badge()->sortable(),
+                TextColumn::make('points')->label(__('admin.fields.points'))->sortable(),
+                TextColumn::make('sort_order')->label(__('admin.fields.sort_order'))->sortable(),
             ])
             ->filters([
                 SelectFilter::make('tournament')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name'),
                 SelectFilter::make('type')
+                    ->label(__('admin.fields.type'))
                     ->options([
-                        'player' => 'Player',
-                        'team' => 'Team',
-                        'number' => 'Number',
-                        'text' => 'Text',
+                        'player' => __('admin.options.player'),
+                        'team' => __('admin.options.team'),
+                        'number' => __('admin.options.number'),
+                        'text' => __('admin.options.text'),
                     ]),
             ])
             ->recordActions([

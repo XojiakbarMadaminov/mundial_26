@@ -20,6 +20,8 @@ test('prediction api routes are registered', function (string $method, string $u
     'leaderboard' => ['GET', '/api/leaderboard', null],
     'comparison' => ['GET', '/api/comparison/1', 'api/comparison/{user}'],
     'nominations' => ['GET', '/api/nominations', null],
+    'nomination player options' => ['GET', '/api/nomination-options/players', null],
+    'nomination team options' => ['GET', '/api/nomination-options/teams', null],
     'store nomination predictions' => ['POST', '/api/nominations/predictions', null],
     'my nomination predictions' => ['GET', '/api/my-nomination-predictions', null],
 ]);

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ComparisonController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\MatchController;
 use App\Http\Controllers\Api\NominationController;
+use App\Http\Controllers\Api\NominationOptionController;
 use App\Http\Controllers\Api\PredictionController;
 use App\Http\Controllers\Api\TournamentController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::get('/matches/today', [MatchController::class, 'today']);
 Route::get('/matches/{match}', [MatchController::class, 'show']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 Route::get('/nominations', [NominationController::class, 'index']);
+Route::get('/nomination-options/players', [NominationOptionController::class, 'players']);
+Route::get('/nomination-options/teams', [NominationOptionController::class, 'teams']);
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('/user', [AuthController::class, 'user']);

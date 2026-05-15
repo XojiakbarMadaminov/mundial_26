@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue';
 
+import NominationOptionController from '@/actions/App/Http/Controllers/Api/NominationOptionController';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { api, validationErrors } from '@/spa/lib/api';
 import { formatDateTime } from '@/spa/lib/dates';
@@ -10,6 +11,8 @@ import { useCompetitionStore } from '@/spa/stores/competition';
 
 const competition = useCompetitionStore();
 const values = reactive<Record<string, string | number | null>>({});
+const optionSearches = reactive<Record<string, string>>({});
+const options = reactive<Record<string, NominationOption[]>>({});
 const errors = ref<Record<string, string>>({});
 const saving = ref(false);
 const savedSuccessfully = ref(false);
@@ -21,8 +24,17 @@ const errorMessage = computed(
 
 type NominationPayload = {
     category_key: string;
+    player_id: number | null;
+    team_id: number | null;
     value_text: string | null;
     value_number: number | null;
+};
+
+type NominationOption = {
+    id: number;
+    name: string;
+    code?: string | null;
+    team_name?: string | null;
 };
 
 async function load(): Promise<void> {
@@ -36,7 +48,15 @@ async function load(): Promise<void> {
         values[category.key] =
             category.type === 'number'
                 ? (prediction?.value_number ?? null)
-                : (prediction?.value_text ?? '');
+                : category.type === 'player'
+                  ? (prediction?.player_id ?? null)
+                  : category.type === 'team'
+                    ? (prediction?.team_id ?? null)
+                    : (prediction?.value_text ?? '');
+
+        if (category.type === 'player' || category.type === 'team') {
+            await loadOptions(category);
+        }
     }
 }
 
@@ -47,6 +67,10 @@ function isFilled(category: NominationCategory): boolean {
         return value !== null && value !== '' && !Number.isNaN(Number(value));
     }
 
+    if (category.type === 'player' || category.type === 'team') {
+        return value !== null && value !== '' && Number(value) > 0;
+    }
+
     return typeof value === 'string' && value.trim() !== '';
 }
 
@@ -55,9 +79,48 @@ function payloadFor(category: NominationCategory): NominationPayload {
 
     return {
         category_key: category.key,
-        value_text: category.type === 'number' ? null : String(value).trim(),
+        player_id: category.type === 'player' ? Number(value) : null,
+        team_id: category.type === 'team' ? Number(value) : null,
+        value_text:
+            category.type === 'number' ||
+            category.type === 'player' ||
+            category.type === 'team'
+                ? null
+                : String(value).trim(),
         value_number: category.type === 'number' ? Number(value) : null,
     };
+}
+
+async function loadOptions(category: NominationCategory): Promise<void> {
+    if (category.type !== 'player' && category.type !== 'team') {
+        return;
+    }
+
+    const route =
+        category.type === 'player'
+            ? NominationOptionController.players({
+                  query: { search: optionSearches[category.key] ?? '' },
+              })
+            : NominationOptionController.teams({
+                  query: { search: optionSearches[category.key] ?? '' },
+              });
+    const response = await api.get<{ data: NominationOption[] }>(
+        route.url.replace(/^\/api/, ''),
+    );
+
+    options[category.key] = response.data.data;
+}
+
+function optionLabel(option: NominationOption): string {
+    if (option.team_name) {
+        return `${option.name} (${option.team_name})`;
+    }
+
+    if (option.code) {
+        return `${option.name} (${option.code})`;
+    }
+
+    return option.name;
 }
 
 async function save(): Promise<void> {
@@ -140,18 +203,53 @@ onMounted(load);
                         >{{ category.points }} points</span
                     >
                 </div>
+                <div
+                    v-if="category.type === 'player' || category.type === 'team'"
+                    class="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+                >
                     <input
-                        :id="`nomination-${category.key}`"
-                        v-model="values[category.key]"
-                        class="mt-3 w-full rounded-md border bg-background px-3 py-2"
-                        :type="category.type === 'number' ? 'number' : 'text'"
+                        v-model="optionSearches[category.key]"
+                        class="w-full rounded-md border bg-background px-3 py-2"
+                        type="search"
                         :disabled="isLocked"
                         :placeholder="
                             category.type === 'team'
-                            ? t('teamName')
-                            : category.type === 'number'
-                              ? t('number')
-                              : t('playerName')
+                                ? t('searchTeam')
+                                : t('searchPlayer')
+                        "
+                        @input="loadOptions(category)"
+                    />
+                    <select
+                        :id="`nomination-${category.key}`"
+                        v-model.number="values[category.key]"
+                        class="w-full rounded-md border bg-background px-3 py-2"
+                        :disabled="isLocked"
+                    >
+                        <option :value="null">
+                            {{
+                                category.type === 'team'
+                                    ? t('selectTeam')
+                                    : t('selectPlayer')
+                            }}
+                        </option>
+                        <option
+                            v-for="option in options[category.key] ?? []"
+                            :key="option.id"
+                            :value="option.id"
+                        >
+                            {{ optionLabel(option) }}
+                        </option>
+                    </select>
+                </div>
+                <input
+                    v-else
+                    :id="`nomination-${category.key}`"
+                    v-model="values[category.key]"
+                    class="mt-3 w-full rounded-md border bg-background px-3 py-2"
+                    :type="category.type === 'number' ? 'number' : 'text'"
+                    :disabled="isLocked"
+                    :placeholder="
+                        category.type === 'number' ? t('number') : t('value')
                     "
                 />
             </div>

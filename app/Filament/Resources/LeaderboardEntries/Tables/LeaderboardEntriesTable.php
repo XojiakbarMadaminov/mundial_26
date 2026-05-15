@@ -12,17 +12,18 @@ class LeaderboardEntriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')->label('User')->searchable()->sortable(),
-                TextColumn::make('match_points')->sortable(),
-                TextColumn::make('nomination_points')->sortable(),
-                TextColumn::make('total_points')->sortable(),
-                TextColumn::make('exact_scores_count')->sortable(),
-                TextColumn::make('goal_difference_count')->sortable(),
-                TextColumn::make('result_count')->sortable(),
-                TextColumn::make('rank')->sortable(),
+                TextColumn::make('user.name')->label(__('admin.fields.user'))->searchable()->sortable(),
+                TextColumn::make('match_points')->label(__('admin.fields.match_points'))->sortable(),
+                TextColumn::make('nomination_points')->label(__('admin.fields.nomination_points'))->sortable(),
+                TextColumn::make('total_points')->label(__('admin.fields.total_points'))->sortable(),
+                TextColumn::make('exact_scores_count')->label(__('admin.fields.exact_scores_count'))->sortable(),
+                TextColumn::make('goal_difference_count')->label(__('admin.fields.goal_difference_count'))->sortable(),
+                TextColumn::make('result_count')->label(__('admin.fields.result_count'))->sortable(),
+                TextColumn::make('rank')->label(__('admin.fields.rank'))->sortable(),
             ])
             ->filters([
                 SelectFilter::make('tournament')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name'),
             ])
             ->defaultSort('rank');

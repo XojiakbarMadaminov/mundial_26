@@ -24,41 +24,44 @@ class TournamentMatchesTable
     {
         return $table
             ->columns([
-                TextColumn::make('tournament.name')->sortable()->searchable(),
-                TextColumn::make('match_number')->sortable(),
-                TextColumn::make('homeTeam.name')->label('Home')->searchable(),
-                TextColumn::make('awayTeam.name')->label('Away')->searchable(),
-                TextColumn::make('stage')->badge()->sortable(),
-                TextColumn::make('group_name')->sortable(),
-                TextColumn::make('starts_at')->dateTime()->sortable(),
-                TextColumn::make('status')->badge()->sortable(),
-                TextColumn::make('home_score')->label('Home score'),
-                TextColumn::make('away_score')->label('Away score'),
-                IconColumn::make('has_penalty')->boolean(),
+                TextColumn::make('tournament.name')->label(__('admin.fields.tournament'))->sortable()->searchable(),
+                TextColumn::make('match_number')->label(__('admin.fields.match_number'))->sortable(),
+                TextColumn::make('homeTeam.name')->label(__('admin.fields.home_team'))->searchable(),
+                TextColumn::make('awayTeam.name')->label(__('admin.fields.away_team'))->searchable(),
+                TextColumn::make('stage')->label(__('admin.fields.stage'))->badge()->sortable(),
+                TextColumn::make('group_name')->label(__('admin.fields.group'))->sortable(),
+                TextColumn::make('starts_at')->label(__('admin.fields.starts_at'))->dateTime()->sortable(),
+                TextColumn::make('status')->label(__('admin.fields.status'))->badge()->sortable(),
+                TextColumn::make('home_score')->label(__('admin.fields.home_score')),
+                TextColumn::make('away_score')->label(__('admin.fields.away_score')),
+                IconColumn::make('has_penalty')->label(__('admin.fields.has_penalty'))->boolean(),
             ])
             ->filters([
                 SelectFilter::make('tournament')
+                    ->label(__('admin.fields.tournament'))
                     ->relationship('tournament', 'name'),
                 SelectFilter::make('stage')
+                    ->label(__('admin.fields.stage'))
                     ->options([
-                        'group' => 'Group',
-                        'round_32' => 'Round of 32',
-                        'round_16' => 'Round of 16',
-                        'quarter_final' => 'Quarter-final',
-                        'semi_final' => 'Semi-final',
-                        'third_place' => 'Third place',
-                        'final' => 'Final',
+                        'group' => __('admin.options.group'),
+                        'round_32' => __('admin.options.round_32'),
+                        'round_16' => __('admin.options.round_16'),
+                        'quarter_final' => __('admin.options.quarter_final'),
+                        'semi_final' => __('admin.options.semi_final'),
+                        'third_place' => __('admin.options.third_place'),
+                        'final' => __('admin.options.final'),
                     ]),
                 SelectFilter::make('status')
+                    ->label(__('admin.fields.status'))
                     ->options([
-                        'scheduled' => 'Scheduled',
-                        'live' => 'Live',
-                        'finished' => 'Finished',
+                        'scheduled' => __('admin.options.scheduled'),
+                        'live' => __('admin.options.live'),
+                        'finished' => __('admin.options.finished'),
                     ]),
             ])
             ->recordActions([
                 Action::make('recalculatePoints')
-                    ->label('Recalculate Points')
+                    ->label(__('admin.actions.recalculate_points'))
                     ->icon('heroicon-o-calculator')
                     ->requiresConfirmation()
                     ->action(function (TournamentMatch $record): void {
@@ -66,12 +69,12 @@ class TournamentMatchesTable
                             app(RecalculateMatchPointsAction::class)->execute($record);
 
                             Notification::make()
-                                ->title('Points recalculated')
+                                ->title(__('admin.notifications.points_recalculated'))
                                 ->success()
                                 ->send();
                         } catch (DomainException|ValidationException $exception) {
                             Notification::make()
-                                ->title('Unable to recalculate points')
+                                ->title(__('admin.notifications.unable_to_recalculate_points'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->send();
@@ -79,14 +82,14 @@ class TournamentMatchesTable
                             report($exception);
 
                             Notification::make()
-                                ->title('Unable to recalculate points')
-                                ->body('An unexpected error occurred.')
+                                ->title(__('admin.notifications.unable_to_recalculate_points'))
+                                ->body(__('admin.notifications.unexpected_error'))
                                 ->danger()
                                 ->send();
                         }
                     }),
                 Action::make('markAsFinished')
-                    ->label('Mark as Finished')
+                    ->label(__('admin.actions.mark_as_finished'))
                     ->icon('heroicon-o-check-circle')
                     ->requiresConfirmation()
                     ->visible(fn (TournamentMatch $record): bool => $record->status !== 'finished')
@@ -95,12 +98,12 @@ class TournamentMatchesTable
                             app(MarkTournamentMatchFinishedAction::class)->execute($record);
 
                             Notification::make()
-                                ->title('Match marked as finished')
+                                ->title(__('admin.notifications.match_marked_as_finished'))
                                 ->success()
                                 ->send();
                         } catch (DomainException $exception) {
                             Notification::make()
-                                ->title('Unable to finish match')
+                                ->title(__('admin.notifications.unable_to_finish_match'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->send();

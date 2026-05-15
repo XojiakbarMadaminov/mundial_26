@@ -19,6 +19,16 @@ class NominationPredictionResource extends JsonResource
             'tournament_id' => $this->tournament_id,
             'category' => NominationCategoryApiResource::make($this->whenLoaded('nominationCategory')),
             'nomination_category_id' => $this->nomination_category_id,
+            'player_id' => $this->player_id,
+            'player' => $this->player ? [
+                'id' => $this->player->id,
+                'name' => $this->player->name,
+            ] : null,
+            'team_id' => $this->team_id,
+            'team' => $this->team ? [
+                'id' => $this->team->id,
+                'name' => $this->team->name,
+            ] : null,
             'value_text' => $this->value_text,
             'value_number' => $this->value_number,
             'points' => $this->points,

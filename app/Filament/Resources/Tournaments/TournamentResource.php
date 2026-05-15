@@ -39,6 +39,21 @@ class TournamentResource extends Resource
         ];
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.tournament.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.tournament.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.tournament.plural');
+    }
+
     public static function getPages(): array
     {
         return [

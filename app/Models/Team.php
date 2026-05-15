@@ -25,6 +25,11 @@ class Team extends Model
         return $this->hasMany(TournamentMatch::class, 'away_team_id');
     }
 
+    public function players(): HasMany
+    {
+        return $this->hasMany(Player::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
