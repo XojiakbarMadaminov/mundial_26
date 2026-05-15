@@ -79,6 +79,8 @@ class TournamentMatchForm
                                 'live' => __('admin.options.live'),
                                 'finished' => __('admin.options.finished'),
                             ])
+                            ->disableOptionWhen(fn (string $value, Get $get): bool => $value === 'finished' && (blank($get('home_score')) || blank($get('away_score'))))
+                            ->live()
                             ->required()
                             ->default('scheduled'),
                     ])
@@ -88,11 +90,13 @@ class TournamentMatchForm
                         TextInput::make('home_score')
                             ->label(__('admin.fields.home_score'))
                             ->numeric()
+                            ->live()
                             ->minValue(0)
                             ->maxValue(30),
                         TextInput::make('away_score')
                             ->label(__('admin.fields.away_score'))
                             ->numeric()
+                            ->live()
                             ->minValue(0)
                             ->maxValue(30),
                         Toggle::make('has_penalty')

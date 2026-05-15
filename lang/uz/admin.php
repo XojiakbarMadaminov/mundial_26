@@ -41,6 +41,7 @@ return [
         'group' => 'Guruh',
         'group_name' => 'Guruh',
         'has_penalty' => 'Penalti bor',
+        'has_calculated' => 'Hisoblangan',
         'home_penalty_score' => 'Uy jamoa penalti hisobi',
         'home_placeholder' => 'Uy jamoa placeholder',
         'home_score' => 'Uy jamoa hisobi',
@@ -79,11 +80,13 @@ return [
     'options' => [
         'admin' => 'Admin',
         'active' => 'Faol',
+        'calculated' => 'Hisoblangan',
         'finished' => 'Yakunlangan',
         'final' => 'Final',
         'group' => 'Guruh',
         'live' => 'Jonli',
         'number' => 'Raqam',
+        'not_calculated' => 'Hisoblanmagan',
         'player' => "O'yinchi",
         'pending' => 'Kutilmoqda',
         'quarter_final' => 'Chorak final',
@@ -117,5 +120,6 @@ return [
         'unexpected_error' => 'Kutilmagan xatolik yuz berdi.',
         'unexpected_nomination_recalculation_error' => 'Nominatsiya ballarini qayta hisoblashda kutilmagan xatolik yuz berdi.',
         'user_approved' => 'Foydalanuvchi tasdiqlandi',
+        'score_required_to_finish_match' => 'O\'yinni yakunlashdan oldin uy va mehmon jamoa hisobini kiriting.',
     ],
 ];

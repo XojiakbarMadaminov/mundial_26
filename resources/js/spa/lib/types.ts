@@ -65,6 +65,8 @@ export type Tournament = {
 export type LeaderboardEntry = {
     id: number;
     rank?: number | null;
+    previous_rank?: number | null;
+    rank_changed_at?: string | null;
     user: {
         id: number;
         name?: string;

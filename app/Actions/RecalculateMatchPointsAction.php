@@ -23,6 +23,8 @@ class RecalculateMatchPointsAction
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            throw_if($lockedMatch->status !== 'finished', new \DomainException('Only finished matches can be calculated.'));
+
             PredictionScoreLog::query()
                 ->whereIn('match_prediction_id', $lockedMatch->predictions()->select('id'))
                 ->delete();

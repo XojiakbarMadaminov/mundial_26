@@ -199,6 +199,8 @@ const messages: Messages = {
         shareCardError: 'Share card yaratishda xatolik bo\'ldi.',
         download: 'Yuklab olish',
         shareTelegram: 'Telegramga ulashish',
+        rankUp: '+{count} o\'rin',
+        rankDown: '-{count} o\'rin',
     },
     ru: {
         appName: 'Mundial 26 Predict',
@@ -387,6 +389,8 @@ const messages: Messages = {
         shareCardError: 'Не удалось создать share card.',
         download: 'Скачать',
         shareTelegram: 'Поделиться в Telegram',
+        rankUp: '+{count} место',
+        rankDown: '-{count} место',
     },
 };
 

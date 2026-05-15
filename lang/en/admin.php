@@ -41,6 +41,7 @@ return [
         'group' => 'Group',
         'group_name' => 'Group',
         'has_penalty' => 'Has penalty',
+        'has_calculated' => 'Has calculated',
         'home_penalty_score' => 'Home penalty score',
         'home_placeholder' => 'Home placeholder',
         'home_score' => 'Home score',
@@ -79,11 +80,13 @@ return [
     'options' => [
         'admin' => 'Admin',
         'active' => 'Active',
+        'calculated' => 'Calculated',
         'finished' => 'Finished',
         'final' => 'Final',
         'group' => 'Group',
         'live' => 'Live',
         'number' => 'Number',
+        'not_calculated' => 'Not calculated',
         'player' => 'Player',
         'pending' => 'Pending',
         'quarter_final' => 'Quarter-final',
@@ -117,5 +120,6 @@ return [
         'unexpected_error' => 'An unexpected error occurred.',
         'unexpected_nomination_recalculation_error' => 'Unexpected error while recalculating nomination points.',
         'user_approved' => 'User approved',
+        'score_required_to_finish_match' => 'Enter home and away scores before finishing the match.',
     ],
 ];

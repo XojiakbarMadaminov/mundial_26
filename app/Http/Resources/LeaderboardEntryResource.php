@@ -27,6 +27,8 @@ class LeaderboardEntryResource extends JsonResource
             'exact_scores_count' => $this->exact_scores_count,
             'goal_difference_count' => $this->goal_difference_count,
             'result_count' => $this->result_count,
+            'previous_rank' => $this->previous_rank,
+            'rank_changed_at' => $this->rank_changed_at?->toIso8601String(),
         ];
     }
 }

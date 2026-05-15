@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
+import RankMovementBadge from '@/spa/components/RankMovementBadge.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
@@ -59,7 +60,14 @@ onMounted(() => {
                             "
                         >
                             <td class="px-4 py-3 font-semibold">
-                                #{{ entry.rank ?? '-' }}
+                                <div class="flex items-center gap-2">
+                                    <span>#{{ entry.rank ?? '-' }}</span>
+                                    <RankMovementBadge
+                                        :changed-at="entry.rank_changed_at"
+                                        :previous-rank="entry.previous_rank"
+                                        :rank="entry.rank"
+                                    />
+                                </div>
                             </td>
                             <td class="px-4 py-3">{{ entry.user.name }}</td>
                             <td class="px-4 py-3 text-right">

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['tournament_id', 'user_id', 'match_points', 'nomination_points', 'total_points', 'exact_scores_count', 'goal_difference_count', 'result_count', 'rank'])]
+#[Fillable(['tournament_id', 'user_id', 'match_points', 'nomination_points', 'total_points', 'exact_scores_count', 'goal_difference_count', 'result_count', 'rank', 'previous_rank', 'rank_changed_at'])]
 class LeaderboardEntry extends Model
 {
     /**
@@ -50,6 +50,8 @@ class LeaderboardEntry extends Model
             'goal_difference_count' => 'integer',
             'result_count' => 'integer',
             'rank' => 'integer',
+            'previous_rank' => 'integer',
+            'rank_changed_at' => 'datetime',
         ];
     }
 }

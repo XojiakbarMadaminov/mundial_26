@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import MatchCard from '@/spa/components/MatchCard.vue';
+import RankMovementBadge from '@/spa/components/RankMovementBadge.vue';
 import ShareStatsCard from '@/spa/components/ShareStatsCard.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { t } from '@/spa/lib/i18n';
@@ -53,9 +54,16 @@ onMounted(() => {
                 </div>
                 <div class="rounded-md border bg-card p-4">
                     <p class="text-sm text-muted-foreground">{{ t('rank') }}</p>
-                    <p class="mt-2 text-3xl font-semibold">
-                        {{ myEntry?.rank ?? '-' }}
-                    </p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                        <p class="text-3xl font-semibold">
+                            {{ myEntry?.rank ?? '-' }}
+                        </p>
+                        <RankMovementBadge
+                            :changed-at="myEntry?.rank_changed_at"
+                            :previous-rank="myEntry?.previous_rank"
+                            :rank="myEntry?.rank"
+                        />
+                    </div>
                 </div>
             </div>
         </section>
@@ -126,7 +134,14 @@ onMounted(() => {
                     :key="entry.id"
                     class="grid grid-cols-[3rem_1fr_5rem] items-center gap-3 p-4 text-sm"
                 >
-                    <span class="font-semibold">#{{ entry.rank ?? '-' }}</span>
+                    <span class="flex flex-wrap items-center gap-2 font-semibold">
+                        #{{ entry.rank ?? '-' }}
+                        <RankMovementBadge
+                            :changed-at="entry.rank_changed_at"
+                            :previous-rank="entry.previous_rank"
+                            :rank="entry.rank"
+                        />
+                    </span>
                     <span>{{ entry.user.name }}</span>
                     <span class="text-right font-semibold">{{
                         entry.total_points

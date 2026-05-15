@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\TournamentMatches\Tables;
 
-use App\Actions\MarkTournamentMatchFinishedAction;
 use App\Actions\RecalculateMatchPointsAction;
 use App\Models\TournamentMatch;
 use DomainException;
@@ -34,6 +33,11 @@ class TournamentMatchesTable
                 TextColumn::make('status')->label(__('admin.fields.status'))->badge()->sortable(),
                 TextColumn::make('home_score')->label(__('admin.fields.home_score')),
                 TextColumn::make('away_score')->label(__('admin.fields.away_score')),
+                TextColumn::make('points_calculated_at')
+                    ->label(__('admin.fields.has_calculated'))
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => filled($state) ? __('admin.options.calculated') : __('admin.options.not_calculated'))
+                    ->color(fn (?string $state): string => filled($state) ? 'success' : 'danger'),
                 IconColumn::make('has_penalty')->label(__('admin.fields.has_penalty'))->boolean(),
             ])
             ->filters([
@@ -64,6 +68,7 @@ class TournamentMatchesTable
                     ->label(__('admin.actions.recalculate_points'))
                     ->icon('heroicon-o-calculator')
                     ->requiresConfirmation()
+                    ->visible(fn (TournamentMatch $record): bool => $record->status === 'finished' && $record->points_calculated_at === null)
                     ->action(function (TournamentMatch $record): void {
                         try {
                             app(RecalculateMatchPointsAction::class)->execute($record);
@@ -88,27 +93,27 @@ class TournamentMatchesTable
                                 ->send();
                         }
                     }),
-                Action::make('markAsFinished')
-                    ->label(__('admin.actions.mark_as_finished'))
-                    ->icon('heroicon-o-check-circle')
-                    ->requiresConfirmation()
-                    ->visible(fn (TournamentMatch $record): bool => $record->status !== 'finished')
-                    ->action(function (TournamentMatch $record): void {
-                        try {
-                            app(MarkTournamentMatchFinishedAction::class)->execute($record);
-
-                            Notification::make()
-                                ->title(__('admin.notifications.match_marked_as_finished'))
-                                ->success()
-                                ->send();
-                        } catch (DomainException $exception) {
-                            Notification::make()
-                                ->title(__('admin.notifications.unable_to_finish_match'))
-                                ->body($exception->getMessage())
-                                ->danger()
-                                ->send();
-                        }
-                    }),
+                //                Action::make('markAsFinished')
+                //                    ->label(__('admin.actions.mark_as_finished'))
+                //                    ->icon('heroicon-o-check-circle')
+                //                    ->requiresConfirmation()
+                //                    ->visible(fn (TournamentMatch $record): bool => $record->status !== 'finished')
+                //                    ->action(function (TournamentMatch $record): void {
+                //                        try {
+                //                            app(MarkTournamentMatchFinishedAction::class)->execute($record);
+                //
+                //                            Notification::make()
+                //                                ->title(__('admin.notifications.match_marked_as_finished'))
+                //                                ->success()
+                //                                ->send();
+                //                        } catch (DomainException $exception) {
+                //                            Notification::make()
+                //                                ->title(__('admin.notifications.unable_to_finish_match'))
+                //                                ->body($exception->getMessage())
+                //                                ->danger()
+                //                                ->send();
+                //                        }
+                //                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

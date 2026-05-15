@@ -101,7 +101,18 @@ class RecalculateLeaderboardAction
             ->orderBy('user_id')
             ->get()
             ->each(function (LeaderboardEntry $entry, int $index): void {
-                $entry->update(['rank' => $index + 1]);
+                $newRank = $index + 1;
+                $oldRank = $entry->rank;
+
+                $entry->update(
+                    $oldRank !== null && $oldRank !== $newRank
+                        ? [
+                            'rank' => $newRank,
+                            'previous_rank' => $oldRank,
+                            'rank_changed_at' => now(),
+                        ]
+                        : ['rank' => $newRank],
+                );
             });
     }
 }
