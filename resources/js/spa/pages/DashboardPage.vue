@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import MatchCard from '@/spa/components/MatchCard.vue';
+import ShareStatsCard from '@/spa/components/ShareStatsCard.vue';
 import StateBlock from '@/spa/components/StateBlock.vue';
 import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
@@ -58,6 +59,14 @@ onMounted(() => {
                 </div>
             </div>
         </section>
+
+        <ShareStatsCard
+            :rank="myEntry?.rank ?? null"
+            :total-points="myEntry?.total_points ?? 0"
+            :tournament-name="competition.tournament?.name ?? t('tournamentPlaceholder')"
+            :tournament-status="competition.tournament?.status"
+            :user-name="auth.user?.name ?? 'Player'"
+        />
 
         <section class="grid gap-6 lg:grid-cols-2">
             <div class="grid gap-3">

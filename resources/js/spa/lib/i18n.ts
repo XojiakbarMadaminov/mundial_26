@@ -182,6 +182,23 @@ const messages: Messages = {
         lockedLabel: 'Yopiq',
         adminPending:
             'Akkauntingiz moderatsiya jarayonida. Admin tasdiqlagandan keyin login qilishingiz mumkin.',
+        shareCardTitle: 'Share card',
+        shareCardDescription: 'Ball va o\'rningizni rasm ko\'rinishida ulashing.',
+        shareCardSubtitle: 'Mening Mundial 26 natijam',
+        shareBadgeLabel: 'Badge',
+        shareBadgeChampion: 'Chempion',
+        shareBadgeChampionContender: 'Chempionlikka da\'vogar',
+        shareBadgeTop3: 'Top 3',
+        shareBadgeTop10: 'Top 10',
+        shareBadgeContender: 'Da\'vogar',
+        shareCardText: 'Mening Mundial 26 natijam:',
+        shareCardDownloaded: 'Rasm yuklab olindi.',
+        shareCardShared: 'Ulashish oynasi ochildi.',
+        shareCardTelegramHint:
+            'Rasm yuklandi va Telegram ochildi. Rasmdan foydalanib yuboring.',
+        shareCardError: 'Share card yaratishda xatolik bo\'ldi.',
+        download: 'Yuklab olish',
+        shareTelegram: 'Telegramga ulashish',
     },
     ru: {
         appName: 'Mundial 26 Predict',
@@ -353,6 +370,23 @@ const messages: Messages = {
         lockedLabel: 'Закрыто',
         adminPending:
             'Аккаунт находится на модерации. Войти можно после одобрения админом.',
+        shareCardTitle: 'Share card',
+        shareCardDescription: 'Поделитесь очками и местом в виде картинки.',
+        shareCardSubtitle: 'Мой результат Mundial 26',
+        shareBadgeLabel: 'Бейдж',
+        shareBadgeChampion: 'Чемпион',
+        shareBadgeChampionContender: 'Претендент на чемпионство',
+        shareBadgeTop3: 'Топ 3',
+        shareBadgeTop10: 'Топ 10',
+        shareBadgeContender: 'Претендент',
+        shareCardText: 'Мой результат Mundial 26:',
+        shareCardDownloaded: 'Картинка скачана.',
+        shareCardShared: 'Окно шаринга открыто.',
+        shareCardTelegramHint:
+            'Картинка скачана и Telegram открыт. Отправьте картинку в чат.',
+        shareCardError: 'Не удалось создать share card.',
+        download: 'Скачать',
+        shareTelegram: 'Поделиться в Telegram',
     },
 };
 
