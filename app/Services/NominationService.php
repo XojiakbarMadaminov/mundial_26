@@ -16,13 +16,13 @@ class NominationService
     public function defaultCategories(): array
     {
         return [
-            'top_scorer' => ['name' => "To'purar", 'type' => 'player', 'points' => 30, 'sort_order' => 10],
-            'top_scorer_goals' => ['name' => "To'purar urgan gollari", 'type' => 'number', 'points' => 30, 'sort_order' => 20],
-            'best_player' => ['name' => 'Eng yaxshi futbolchi', 'type' => 'player', 'points' => 30, 'sort_order' => 30],
-            'best_goalkeeper' => ['name' => 'Eng yaxshi darvozabon', 'type' => 'player', 'points' => 30, 'sort_order' => 40],
-            'goalkeeper_conceded_goals' => ['name' => "Eng yaxshi darvozabon o'tkazgan gollari", 'type' => 'number', 'points' => 30, 'sort_order' => 50],
-            'champion' => ['name' => 'Champion', 'type' => 'team', 'points' => 30, 'sort_order' => 60],
-            'worst_team' => ['name' => 'Muvaffaqiyatsiz jamoa', 'type' => 'team', 'points' => 30, 'sort_order' => 70],
+            'top_scorer' => ['name' => "To'purar / Бомбардир", 'type' => 'player', 'points' => 30, 'sort_order' => 10],
+            'top_scorer_goals' => ['name' => "To'purar urgan gollari / Голы бомбардира", 'type' => 'number', 'points' => 30, 'sort_order' => 20],
+            'best_player' => ['name' => 'Eng yaxshi futbolchi / Лучший игрок', 'type' => 'player', 'points' => 30, 'sort_order' => 30],
+            'best_goalkeeper' => ['name' => 'Eng yaxshi darvozabon / Лучший вратарь', 'type' => 'player', 'points' => 30, 'sort_order' => 40],
+            'goalkeeper_conceded_goals' => ['name' => "Eng yaxshi darvozabon o'tkazgan gollari / Пропущенные голы лучшего вратаря", 'type' => 'number', 'points' => 30, 'sort_order' => 50],
+            'champion' => ['name' => 'Chempion / Чемпион', 'type' => 'team', 'points' => 30, 'sort_order' => 60],
+            'worst_team' => ['name' => 'Muvaffaqiyatsiz jamoa / Худшая команда', 'type' => 'team', 'points' => 30, 'sort_order' => 70],
         ];
     }
 
