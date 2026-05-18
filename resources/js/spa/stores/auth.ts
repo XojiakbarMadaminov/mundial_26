@@ -3,20 +3,6 @@ import { defineStore } from 'pinia';
 import { api } from '@/spa/lib/api';
 import type { User } from '@/spa/lib/types';
 
-type LoginPayload = {
-    email: string;
-    password: string;
-};
-
-type RegisterPayload = {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    telegram_username?: string;
-    phone?: string;
-};
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         token: localStorage.getItem('mundial_token'),
@@ -42,20 +28,6 @@ export const useAuthStore = defineStore('auth', {
             } catch {
                 this.clearSession();
             }
-        },
-        async login(payload: LoginPayload): Promise<void> {
-            const response = await api.post<{ token: string; user: User }>(
-                '/login',
-                payload,
-            );
-
-            this.setSession(response.data.token, response.data.user);
-        },
-        async register(payload: RegisterPayload): Promise<void> {
-            await api.post<{ message: string }>(
-                '/register',
-                payload,
-            );
         },
         async logout(): Promise<void> {
             try {

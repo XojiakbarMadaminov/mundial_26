@@ -21,6 +21,18 @@ class UserForm
                     ->label(__('admin.fields.telegram_username'))
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
+                TextInput::make('telegram_id')
+                    ->label(__('admin.fields.telegram_id'))
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
+                TextInput::make('telegram_sub')
+                    ->label(__('admin.fields.telegram_sub'))
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
+                TextInput::make('telegram_photo_url')
+                    ->label(__('admin.fields.telegram_photo_url'))
+                    ->url()
+                    ->maxLength(255),
                 TextInput::make('email')
                     ->label(__('admin.fields.email'))
                     ->email()

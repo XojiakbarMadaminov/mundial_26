@@ -8,7 +8,6 @@ import MatchDetailPage from '@/spa/pages/MatchDetailPage.vue';
 import MatchesPage from '@/spa/pages/MatchesPage.vue';
 import MyPredictionsPage from '@/spa/pages/MyPredictionsPage.vue';
 import NominationsPage from '@/spa/pages/NominationsPage.vue';
-import RegisterPage from '@/spa/pages/RegisterPage.vue';
 import RulesPage from '@/spa/pages/RulesPage.vue';
 import { useAuthStore } from '@/spa/stores/auth';
 
@@ -17,7 +16,7 @@ export const router = createRouter({
     routes: [
         { path: '/', redirect: '/dashboard' },
         { path: '/login', component: LoginPage, meta: { guest: true } },
-        { path: '/register', component: RegisterPage, meta: { guest: true } },
+        { path: '/register', redirect: '/login' },
         { path: '/dashboard', component: DashboardPage, meta: { auth: true } },
         { path: '/matches', component: MatchesPage, meta: { auth: true } },
         {
@@ -40,7 +39,11 @@ export const router = createRouter({
             component: LeaderboardPage,
             meta: { auth: true },
         },
-        { path: '/comparison', component: ComparisonPage, meta: { auth: true } },
+        {
+            path: '/comparison',
+            component: ComparisonPage,
+            meta: { auth: true },
+        },
         { path: '/rules', component: RulesPage, meta: { auth: true } },
     ],
 });

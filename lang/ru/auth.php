@@ -5,4 +5,6 @@ return [
     'pending_moderation' => 'Аккаунт находится на модерации. Войти можно после одобрения админом.',
     'invalid_credentials' => 'Указанные данные неверны.',
     'logged_out' => 'Вы успешно вышли.',
+    'telegram_invalid_token' => 'Данные Telegram login неверны.',
+    'telegram_expired_token' => 'Срок действия Telegram login истек.',
 ];

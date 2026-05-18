@@ -18,6 +18,7 @@ test('mundial prediction migrations define the expected core tables and constrai
     }
 })->with([
     'users' => ['0001_01_01_000000_create_users_table.php', ['telegram_username', 'phone', "'role', ['admin', 'user']", 'constrained()->nullOnDelete()']],
+    'telegram login fields' => ['2026_05_18_172758_add_telegram_login_fields_to_users_table.php', ["string('telegram_id')->nullable()->unique()", "string('telegram_sub')->nullable()->unique()", "string('telegram_photo_url')->nullable()"]],
     'user approval' => ['2026_05_12_110723_add_is_approved_to_users_table.php', ["boolean('is_approved')", 'default(true)', 'index()']],
     'tournaments' => ['2026_05_11_101754_create_tournaments_table.php', ["slug')->unique()", 'prediction_lock_minutes', "'status', ['upcoming', 'active', 'finished']"]],
     'teams' => ['2026_05_11_101755_create_teams_table.php', ["foreignId('tournament_id')->constrained()->cascadeOnDelete()", 'group_name', "index(['tournament_id', 'group_name'])"]],
@@ -39,7 +40,7 @@ test('mundial prediction models expose domain fillable fields and casts', functi
         expect($model->getCasts())->toHaveKey($attribute, $cast);
     }
 })->with([
-    'user' => [new User, ['name', 'telegram_username', 'email', 'phone', 'password', 'role', 'is_approved'], ['password' => 'hashed', 'role' => 'string', 'is_approved' => 'boolean']],
+    'user' => [new User, ['name', 'telegram_id', 'telegram_sub', 'telegram_username', 'telegram_photo_url', 'email', 'phone', 'password', 'role', 'is_approved'], ['password' => 'hashed', 'role' => 'string', 'is_approved' => 'boolean']],
     'tournament' => [new Tournament, ['name', 'slug', 'starts_at', 'ends_at', 'prediction_lock_minutes', 'status'], ['starts_at' => 'datetime', 'prediction_lock_minutes' => 'integer']],
     'player' => [new Player, ['tournament_id', 'team_id', 'name', 'position'], ['tournament_id' => 'integer', 'team_id' => 'integer']],
     'tournament match' => [new TournamentMatch, ['tournament_id', 'home_team_id', 'home_placeholder', 'away_team_id', 'away_placeholder', 'match_number', 'stage', 'group_name', 'starts_at', 'status', 'home_score', 'away_score', 'has_penalty', 'home_penalty_score', 'away_penalty_score', 'points_calculated_at', 'stadium', 'city', 'source', 'source_payload'], ['starts_at' => 'datetime', 'has_penalty' => 'boolean', 'home_score' => 'integer']],
@@ -47,5 +48,5 @@ test('mundial prediction models expose domain fillable fields and casts', functi
     'nomination category' => [new NominationCategory, ['tournament_id', 'key', 'name', 'type', 'points', 'sort_order'], ['points' => 'integer', 'sort_order' => 'integer']],
     'nomination prediction' => [new NominationPrediction, ['tournament_id', 'nomination_category_id', 'user_id', 'player_id', 'team_id', 'value_text', 'value_number', 'points', 'calculated_at'], ['player_id' => 'integer', 'team_id' => 'integer', 'points' => 'integer']],
     'nomination result' => [new NominationResult, ['tournament_id', 'nomination_category_id', 'player_id', 'team_id', 'value_text', 'value_number'], ['player_id' => 'integer', 'team_id' => 'integer']],
-    'leaderboard entry' => [new LeaderboardEntry, ['tournament_id', 'user_id', 'match_points', 'nomination_points', 'total_points', 'exact_scores_count', 'goal_difference_count', 'result_count', 'rank'], ['total_points' => 'integer', 'rank' => 'integer']],
+    'leaderboard entry' => [new LeaderboardEntry, ['tournament_id', 'user_id', 'match_points', 'nomination_points', 'total_points', 'exact_scores_count', 'goal_difference_count', 'result_count', 'rank', 'previous_rank', 'rank_changed_at'], ['total_points' => 'integer', 'rank' => 'integer']],
 ]);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminLocaleController;
+use App\Http\Controllers\Auth\TelegramLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'frontend')->name('home');
@@ -12,6 +13,15 @@ Route::view('/nominations', 'frontend')->name('nominations.index');
 Route::view('/leaderboard', 'frontend')->name('leaderboard.index');
 Route::view('/comparison', 'frontend')->name('comparison');
 Route::view('/rules', 'frontend')->name('rules');
+Route::redirect('/register', '/login');
+
+Route::get('/auth/telegram/redirect', [TelegramLoginController::class, 'redirect'])
+    ->middleware('guest')
+    ->name('telegram.redirect');
+
+Route::get('/auth/telegram/callback', [TelegramLoginController::class, 'callback'])
+    ->middleware('guest')
+    ->name('telegram.callback');
 
 Route::get('/admin/locale/{locale}', AdminLocaleController::class)
     ->whereIn('locale', ['en', 'uz'])

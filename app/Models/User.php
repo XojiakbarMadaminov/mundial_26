@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'telegram_username', 'email', 'phone', 'password', 'role', 'is_approved'])]
+#[Fillable(['name', 'telegram_id', 'telegram_sub', 'telegram_username', 'telegram_photo_url', 'email', 'phone', 'password', 'role', 'is_approved'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {

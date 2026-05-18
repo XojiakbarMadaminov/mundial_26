@@ -24,6 +24,7 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')->label(__('admin.fields.name'))->searchable()->sortable(),
                 TextColumn::make('telegram_username')->label(__('admin.fields.telegram_username'))->searchable(),
+                TextColumn::make('telegram_id')->label(__('admin.fields.telegram_id'))->searchable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('email')->label(__('admin.fields.email'))->searchable(),
                 TextColumn::make('phone')->label(__('admin.fields.phone'))->searchable(),
                 TextColumn::make('role')->label(__('admin.fields.role'))->badge()->sortable(),

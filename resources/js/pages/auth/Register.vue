@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
+import { Head, Link } from '@inertiajs/vue3';
+
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import { login } from '@/routes';
-import { store } from '@/routes/register';
+import { redirect as telegramRedirect } from '@/routes/telegram';
 
 defineOptions({
     layout: {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
+        title: 'Register with Telegram',
+        description: 'Use Telegram to create or access your account',
     },
 });
 </script>
@@ -21,114 +17,25 @@ defineOptions({
 <template>
     <Head title="Register" />
 
-    <Form
-        v-bind="store.form()"
-        :reset-on-success="['password', 'password_confirmation']"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
-        <div class="grid gap-6">
-            <div class="grid gap-2">
-                <Label for="name">Name</Label>
-                <Input
-                    id="name"
-                    type="text"
-                    required
-                    autofocus
-                    :tabindex="1"
-                    autocomplete="name"
-                    name="name"
-                    placeholder="Full name"
-                />
-                <InputError :message="errors.name" />
-            </div>
+    <div class="flex flex-col gap-6">
+        <p class="text-center text-sm text-muted-foreground">
+            Accounts are created automatically after Telegram login. New users
+            wait for admin approval before entering the competition.
+        </p>
 
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    required
-                    :tabindex="2"
-                    autocomplete="email"
-                    name="email"
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="telegram_username">Telegram username</Label>
-                <Input
-                    id="telegram_username"
-                    type="text"
-                    :tabindex="3"
-                    autocomplete="username"
-                    name="telegram_username"
-                    placeholder="@username"
-                />
-                <InputError :message="errors.telegram_username" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="phone">Phone</Label>
-                <Input
-                    id="phone"
-                    type="tel"
-                    :tabindex="4"
-                    autocomplete="tel"
-                    name="phone"
-                    placeholder="+998..."
-                />
-                <InputError :message="errors.phone" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password">Password</Label>
-                <PasswordInput
-                    id="password"
-                    required
-                    :tabindex="5"
-                    autocomplete="new-password"
-                    name="password"
-                    placeholder="Password"
-                />
-                <InputError :message="errors.password" />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
-                <PasswordInput
-                    id="password_confirmation"
-                    required
-                    :tabindex="6"
-                    autocomplete="new-password"
-                    name="password_confirmation"
-                    placeholder="Confirm password"
-                />
-                <InputError :message="errors.password_confirmation" />
-            </div>
-
-            <Button
-                type="submit"
-                class="mt-2 w-full"
-                tabindex="7"
-                :disabled="processing"
-                data-test="register-user-button"
-            >
-                <Spinner v-if="processing" />
-                Create account
-            </Button>
-        </div>
+        <Button as-child class="w-full" data-test="register-user-button">
+            <Link :href="telegramRedirect()">Continue with Telegram</Link>
+        </Button>
 
         <div class="text-center text-sm text-muted-foreground">
             Already have an account?
             <TextLink
                 :href="login()"
                 class="underline underline-offset-4"
-                :tabindex="8"
-                >Log in</TextLink
+                :tabindex="1"
             >
+                Log in
+            </TextLink>
         </div>
-    </Form>
+    </div>
 </template>

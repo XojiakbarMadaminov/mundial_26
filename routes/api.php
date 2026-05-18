@@ -10,8 +10,6 @@ use App\Http\Controllers\Api\PredictionController;
 use App\Http\Controllers\Api\TournamentController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
 Route::get('/tournaments/current', [TournamentController::class, 'current']);
 Route::get('/matches', [MatchController::class, 'index']);
 Route::get('/matches/today', [MatchController::class, 'today']);

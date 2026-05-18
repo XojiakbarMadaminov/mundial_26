@@ -10,7 +10,6 @@ test('prediction api routes are registered', function (string $method, string $u
     expect($route->uri())->toBe($routeUri ?? ltrim($uri, '/'));
 })->with([
     'current tournament' => ['GET', '/api/tournaments/current', null],
-    'register' => ['POST', '/api/register', null],
     'matches' => ['GET', '/api/matches', null],
     'today matches' => ['GET', '/api/matches/today', null],
     'match show' => ['GET', '/api/matches/1', 'api/matches/{match}'],

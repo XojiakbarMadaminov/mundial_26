@@ -5,7 +5,9 @@ test('admin users resource exposes telegram username on list and show pages', fu
     $table = file_get_contents(app_path('Filament/Resources/Users/Tables/UsersTable.php'));
 
     expect($table)->toContain("TextColumn::make('telegram_username')")
+        ->and($table)->toContain("TextColumn::make('telegram_id')")
         ->and($table)->toContain('ViewAction::make()')
         ->and($resource)->toContain("TextEntry::make('telegram_username')")
+        ->and($resource)->toContain("TextEntry::make('telegram_id')")
         ->and($resource)->toContain("'view' => ViewUser::route('/{record}')");
 });

@@ -41,6 +41,9 @@ class UserResource extends Resource
             ->components([
                 TextEntry::make('name')->label(__('admin.fields.name')),
                 TextEntry::make('telegram_username')->label(__('admin.fields.telegram_username'))->placeholder('-'),
+                TextEntry::make('telegram_id')->label(__('admin.fields.telegram_id'))->placeholder('-'),
+                TextEntry::make('telegram_sub')->label(__('admin.fields.telegram_sub'))->placeholder('-'),
+                TextEntry::make('telegram_photo_url')->label(__('admin.fields.telegram_photo_url'))->placeholder('-')->url(fn (?string $state): ?string => $state),
                 TextEntry::make('email')->label(__('admin.fields.email'))->placeholder('-'),
                 TextEntry::make('phone')->label(__('admin.fields.phone'))->placeholder('-'),
                 TextEntry::make('role')->label(__('admin.fields.role'))->badge(),
