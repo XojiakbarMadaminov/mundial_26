@@ -13,6 +13,11 @@
                 }
             })();
         </script>
+        <script>
+            window.mundialConfig = {
+                telegramBotUsername: @json(config('services.telegram.bot_username')),
+            };
+        </script>
 
         <style>
             html {

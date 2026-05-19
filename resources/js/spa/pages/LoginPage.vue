@@ -8,8 +8,22 @@ import { t } from '@/spa/lib/i18n';
 
 const route = useRoute();
 
+const telegramBotUrl = computed(() => {
+    const username = window.mundialConfig?.telegramBotUsername;
+
+    if (!username) {
+        return '';
+    }
+
+    return `https://t.me/${username.replace(/^@/, '')}?start=approval`;
+});
+
+const isPendingApproval = computed(
+    () => route.query.telegram_status === 'pending',
+);
+
 const message = computed(() => {
-    if (route.query.telegram_status === 'pending') {
+    if (isPendingApproval.value) {
         return t('pendingApprovalLogin');
     }
 
@@ -58,6 +72,26 @@ function loginWithTelegram(): void {
             <p v-if="message" class="mt-4 rounded-md border px-3 py-2 text-sm">
                 {{ message }}
             </p>
+
+            <div
+                v-if="isPendingApproval"
+                class="mt-4 rounded-md border bg-muted/40 px-3 py-3 text-sm"
+            >
+                <p class="text-muted-foreground">
+                    {{ t('telegramBotPermissionHint') }}
+                </p>
+
+                <a
+                    v-if="telegramBotUrl"
+                    class="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md border bg-background px-3 py-2 font-medium hover:bg-muted"
+                    :href="telegramBotUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Send class="size-4" />
+                    {{ t('startTelegramBot') }}
+                </a>
+            </div>
 
             <button
                 class="mt-6 flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary/90"

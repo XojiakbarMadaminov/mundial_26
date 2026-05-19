@@ -16,6 +16,7 @@ class AuthController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'telegram_username' => $user->telegram_username,
+            'telegram_photo_url' => $user->telegram_photo_url,
             'is_approved' => $user->is_approved,
         ];
     }

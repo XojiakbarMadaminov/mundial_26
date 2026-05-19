@@ -5,6 +5,7 @@ use App\Services\Auth\TelegramOidcClient;
 use App\Services\Auth\TelegramUserData;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Laravel\Sanctum\Sanctum;
 use Mockery\MockInterface;
 
 function prepareTelegramLoginDatabase(): void
@@ -18,9 +19,11 @@ function prepareTelegramLoginDatabase(): void
 
 beforeEach(function (): void {
     config([
+        'cache.default' => 'array',
         'services.telegram.client_id' => '123456789',
         'services.telegram.client_secret' => 'secret',
     ]);
+    app('cache')->setDefaultDriver('array');
 });
 
 test('telegram id token verifier accepts signed telegram claims', function () {
@@ -83,6 +86,7 @@ test('telegram redirect sends users to telegram with state and pkce', function (
     $response->assertRedirectContains('https://oauth.telegram.org/auth');
     $response->assertRedirectContains('client_id=123456789');
     $response->assertRedirectContains('code_challenge_method=S256');
+    $response->assertRedirectContains('scope=openid%20profile%20phone%20telegram%3Abot_access');
 
     expect(session('telegram_login_state'))->toBeString()->not->toBeEmpty()
         ->and(session('telegram_login_code_verifier'))->toBeString()->not->toBeEmpty();
@@ -169,6 +173,20 @@ test('telegram callback rejects invalid state', function () {
         ->assertRedirect('/login?telegram_status=failed');
 
     expect(User::query()->count())->toBe(0);
+});
+
+test('authenticated user response includes telegram photo url', function () {
+    prepareTelegramLoginDatabase();
+
+    $user = User::factory()->create([
+        'telegram_photo_url' => 'https://cdn.example/avatar.jpg',
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $this->getJson('/api/user')
+        ->assertSuccessful()
+        ->assertJsonPath('telegram_photo_url', 'https://cdn.example/avatar.jpg');
 });
 
 function telegramLoginBase64UrlEncode(string|false $value): string

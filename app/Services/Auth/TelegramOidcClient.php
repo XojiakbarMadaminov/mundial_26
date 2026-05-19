@@ -15,7 +15,7 @@ class TelegramOidcClient
             'client_id' => $this->clientId(),
             'redirect_uri' => route('telegram.callback'),
             'response_type' => 'code',
-            'scope' => 'openid profile phone',
+            'scope' => 'openid profile phone telegram:bot_access',
             'state' => $state,
             'code_challenge' => $codeChallenge,
             'code_challenge_method' => 'S256',

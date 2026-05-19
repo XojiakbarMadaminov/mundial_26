@@ -39,6 +39,9 @@ const messages: Messages = {
         telegramLoginFailed: 'Telegram orqali kirish amalga oshmadi.',
         telegramLoginUnconfigured:
             'Telegram login sozlanmagan. Admin bilan bogʻlaning.',
+        telegramBotPermissionHint:
+            'Tasdiqlash xabari kelishi uchun Telegram login oynasida bot xabariga ruxsat yoqilgan bo‘lishi kerak. Botni ham ishga tushirib qo‘ying.',
+        startTelegramBot: 'Botni ishga tushirish',
         registerTitle: "Ro'yxatdan o'tish",
         registerSubtitle: 'Mundial 26 Predict akkauntingizni yarating.',
         signingIn: 'Kirish...',
@@ -238,6 +241,9 @@ const messages: Messages = {
         telegramLoginFailed: 'Не удалось войти через Telegram.',
         telegramLoginUnconfigured:
             'Telegram login не настроен. Свяжитесь с администратором.',
+        telegramBotPermissionHint:
+            'Чтобы получить сообщение об одобрении, оставьте разрешение на сообщения от бота включенным в окне Telegram login. Также запустите бота.',
+        startTelegramBot: 'Запустить бота',
         registerTitle: 'Регистрация',
         registerSubtitle: 'Создайте аккаунт Mundial 26 Predict.',
         signingIn: 'Вход...',

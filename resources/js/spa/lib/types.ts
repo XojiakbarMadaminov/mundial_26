@@ -3,6 +3,7 @@ export type User = {
     name: string;
     email: string | null;
     telegram_username?: string | null;
+    telegram_photo_url?: string | null;
     is_approved?: boolean;
 };
 

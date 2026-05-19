@@ -41,6 +41,8 @@ return [
         'authorization_url' => env('TELEGRAM_AUTHORIZATION_URL', 'https://oauth.telegram.org/auth'),
         'token_url' => env('TELEGRAM_TOKEN_URL', 'https://oauth.telegram.org/token'),
         'jwks_url' => env('TELEGRAM_JWKS_URL', 'https://oauth.telegram.org/.well-known/jwks.json'),
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'bot_username' => env('TELEGRAM_BOT_USERNAME'),
     ],
 
 ];

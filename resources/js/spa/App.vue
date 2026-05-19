@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Menu, Trophy } from 'lucide-vue-next';
+import { Menu, Monitor, Moon, Sun, Trophy } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
+import { useAppearance } from '@/composables/useAppearance';
 import LanguageSwitcher from '@/spa/components/LanguageSwitcher.vue';
 import { t } from '@/spa/lib/i18n';
 import { useAuthStore } from '@/spa/stores/auth';
@@ -11,6 +12,7 @@ const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const isOpen = ref(false);
+const { appearance, updateAppearance } = useAppearance();
 
 const navigation = [
     { labelKey: 'dashboard', to: '/dashboard' },
@@ -23,6 +25,21 @@ const navigation = [
 ];
 
 const usesShell = computed(() => !['/login', '/register'].includes(route.path));
+
+const userInitials = computed(() =>
+    (auth.user?.name ?? 'U')
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase())
+        .join(''),
+);
+
+const appearanceTabs = [
+    { value: 'light', icon: Sun, label: 'Light' },
+    { value: 'dark', icon: Moon, label: 'Dark' },
+    { value: 'system', icon: Monitor, label: 'System' },
+] as const;
 
 async function logout(): Promise<void> {
     await auth.logout();
@@ -66,9 +83,48 @@ async function logout(): Promise<void> {
 
                 <div class="hidden items-center gap-3 lg:flex">
                     <LanguageSwitcher />
-                    <span class="text-sm text-muted-foreground">{{
-                        auth.user?.name
-                    }}</span>
+                    <div class="flex rounded-md border bg-muted/40 p-0.5">
+                        <button
+                            v-for="{
+                                value,
+                                icon: Icon,
+                                label,
+                            } in appearanceTabs"
+                            :key="value"
+                            :class="[
+                                'flex size-8 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground',
+                                appearance === value
+                                    ? 'bg-background text-foreground shadow-sm'
+                                    : '',
+                            ]"
+                            type="button"
+                            :aria-label="label"
+                            :title="label"
+                            @click="updateAppearance(value)"
+                        >
+                            <component :is="Icon" class="size-4" />
+                        </button>
+                    </div>
+                    <div
+                        class="flex min-w-0 items-center gap-2 text-sm text-muted-foreground"
+                    >
+                        <img
+                            v-if="auth.user?.telegram_photo_url"
+                            :src="auth.user.telegram_photo_url"
+                            :alt="auth.user.name"
+                            class="size-8 rounded-full object-cover"
+                            referrerpolicy="no-referrer"
+                        />
+                        <span
+                            v-else
+                            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground"
+                        >
+                            {{ userInitials }}
+                        </span>
+                        <span class="max-w-40 truncate">
+                            {{ auth.user?.name }}
+                        </span>
+                    </div>
                     <button
                         class="rounded-md border px-3 py-2 text-sm font-medium hover:bg-accent"
                         type="button"
@@ -101,6 +157,49 @@ async function logout(): Promise<void> {
                     </RouterLink>
                     <div class="px-3 py-2">
                         <LanguageSwitcher />
+                    </div>
+                    <div
+                        class="flex items-center justify-between gap-3 px-3 py-2"
+                    >
+                        <div class="flex min-w-0 items-center gap-2">
+                            <img
+                                v-if="auth.user?.telegram_photo_url"
+                                :src="auth.user.telegram_photo_url"
+                                :alt="auth.user.name"
+                                class="size-8 rounded-full object-cover"
+                                referrerpolicy="no-referrer"
+                            />
+                            <span
+                                v-else
+                                class="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold"
+                            >
+                                {{ userInitials }}
+                            </span>
+                            <span class="truncate text-sm font-medium">
+                                {{ auth.user?.name }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex gap-1 px-3 py-2">
+                        <button
+                            v-for="{
+                                value,
+                                icon: Icon,
+                                label,
+                            } in appearanceTabs"
+                            :key="value"
+                            :class="[
+                                'flex h-9 flex-1 items-center justify-center rounded-md border text-muted-foreground',
+                                appearance === value
+                                    ? 'bg-accent text-foreground'
+                                    : 'hover:bg-accent hover:text-foreground',
+                            ]"
+                            type="button"
+                            :aria-label="label"
+                            @click="updateAppearance(value)"
+                        >
+                            <component :is="Icon" class="size-4" />
+                        </button>
                     </div>
                     <button
                         class="rounded-md px-3 py-2 text-left text-sm font-medium text-muted-foreground hover:bg-accent"
